@@ -28,6 +28,14 @@ export default class DataProcessor {
         return arrRate;
     }
 
+    async getHistoryStatistics(from, to) {
+        const data = await this.#dataProvider.getHistoryData();
+        const arrCases = []; // { ISO-Code, Country, Confirmed, Deaths, Vaccine, from, to }
+        
+        console.log(data);
+
+    }
+
     #parseObjCases(objCases){
         const arrCases = [];
         for (const key in objCases) {
@@ -69,9 +77,9 @@ export default class DataProcessor {
                 r.vaccinated=v.vaccinated+r.vaccinated;
                 return r;
             });
-            arrRate.push({ "continent":e[0],
-                          "confirmed":e[1][0].confirmed/e[1][0].population,
-                           "deaths":e[1][0].deaths/e[1][0].population,
+            arrRate.push({  "continent":e[0],
+                            "confirmed":e[1][0].confirmed/e[1][0].population,
+                            "deaths":e[1][0].deaths/e[1][0].population,
                             "vaccinated":e[1][0].vaccinated/e[1][0].population});
         });
         return arrRate;
