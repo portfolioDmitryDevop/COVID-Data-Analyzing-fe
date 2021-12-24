@@ -22,3 +22,6 @@ async function waitWithSpinner(awaitFunction) {
         
     }
 }
+
+const res = dataProcessor.getStatisticsContinents();
+res.then((element) => console.log(element));
