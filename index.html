@@ -1,39 +1,90 @@
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="shortcut icon" href="src/ui-ux/images/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="src/ui-ux/style.css">
   <title>COVID Data Analyzing</title>
 </head>
 
 <body>
-    <nav>
-      <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <div class="logo">
-          <img src="src/ui-ux/images/logo.png" alt="COVID Data Analyzing Logo">
-          <span>COVID Data Analyzing</span>
-        </div>
-        <button class="nav-link active" id="nav-dashboard-tab" data-bs-toggle="tab" data-bs-target="#nav-dashboard" type="button" role="tab" aria-controls="nav-dashboard" aria-selected="true"><i class="bi bi-activity"></i> Dashboard</button>
-        <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false"><i class="bi bi-clock-history"></i> History</button>
-        <button class="nav-link" id="nav-stat-tab" data-bs-toggle="tab" data-bs-target="#nav-stat" type="button" role="tab" aria-controls="nav-stat" aria-selected="false"><i class="bi bi-bar-chart"></i> Statistics</button>
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <div class="logo" onclick="window.location.reload()">
+        <img src="src/ui-ux/images/logo.png" alt="COVID Data Analyzing Logo">
+        <span>COVID Data Analyzing</span>
       </div>
-    </nav>
-    <div id="spinner" class="position-absolute top-50 start-50"></div>
+      <button class="nav-link active" id="nav-dashboard-tab" data-bs-toggle="tab" data-bs-target="#nav-dashboard"
+        type="button" role="tab" aria-controls="nav-dashboard" aria-selected="true"><i class="bi bi-activity"></i>
+        Dashboard</button>
+      <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button"
+        role="tab" aria-controls="nav-history" aria-selected="false"><i class="bi bi-clock-history"></i> History
+        Rates</button>
+      <button class="nav-link" id="nav-stat-tab" data-bs-toggle="tab" data-bs-target="#nav-stat" type="button"
+        role="tab" aria-controls="nav-stat" aria-selected="false"><i class="bi bi-bar-chart"></i> Statistics by
+        Countries</button>
+    </div>
+  </nav>
 
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
-            1
-        </div>
-        <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
-            2 
-        </div>
-        <div class="tab-pane fade" id="nav-stat" role="tabpanel" aria-labelledby="nav-stat-tab">
-            3
-        </div>
+  <div id="spinner" class="position-absolute top-50 start-50"></div>
+
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
+      <div class="text-center">
+        <img src="src/ui-ux/images/continents.png" class="rounded img-fluid" alt="Real-Time Dashboard">
       </div>
+      <div id="main-table" class="container table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr id="main-header"></tr>
+          </thead>
+          <tbody id="main-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
+      <form id="history-form">
+        <div class="container">
+          <div class="row">
 
+          </div>
+        </div>
+      </form>
+      <div class="container table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr id="history-header"></tr>
+          </thead>
+          <tbody id="history-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="nav-stat" role="tabpanel" aria-labelledby="nav-stat-tab">
+      <form id="stat-form">
+        <div class="container">
+          <div class="row">
+
+          </div>
+        </div>
+      </form>
+      <div class="container table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr id="stat-header"></tr>
+          </thead>
+          <tbody id="stat-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div></div>
 
   <script src="dist/bundle.js"></script>
 </body>
