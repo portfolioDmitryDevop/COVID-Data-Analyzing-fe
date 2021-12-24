@@ -31,6 +31,7 @@ export default class DataProcessor {
     #parseObjCases(objCases){
         const arrCases = [];
         for (const key in objCases) {
+            
             arrCases.push({
                 "country": key,
                 "confirmed": objCases[key].All.confirmed,
@@ -56,23 +57,27 @@ export default class DataProcessor {
     #getArrRate(objContinent){
         const arrRate = [];
         Object.entries(objContinent)
-        .forEach((e) => {
-            e[1].reduce((r,v) => {
-                v.population = (v.population === undefined) ? 0 : v.population;
-                v.vaccinated = (v.vaccinated === undefined) ? 0 : v.vaccinated;
-                v.confirmed = (v.confirmed === undefined) ? 0 : v.vaccinated;
-                v.deaths = (v.deaths === undefined) ? 0 : v.vaccinated;
-                
-                r.population=v.population+r.population;
-                r.confirmed=v.confirmed+r.confirmed;
-                r.deaths=v.deaths+r.deaths;
-                r.vaccinated=v.vaccinated+r.vaccinated;
-                return r;
-            });
+        .forEach((e) => { 
+            const acc = {population:0, confirmed:0, deaths:0, vaccinated:0};
+            e[1].forEach((v) => {
+                if(v.continent === undefined) {
+                    return;
+                }
+                let population = (v.population === undefined) ? 0 : v.population;
+                let vaccinated = (v.vaccinated === undefined) ? 0 : v.vaccinated;
+                let confirmed = (v.confirmed === undefined) ? 0 : v.confirmed;
+                let deaths = (v.deaths === undefined) ? 0 : v.deaths;
+                acc.population += population;
+                acc.confirmed += confirmed;
+                acc.deaths += deaths;
+                acc.vaccinated += vaccinated;
+            })
+            if(e[0]!='undefined'){
             arrRate.push({ "continent":e[0],
-                          "confirmed":e[1][0].confirmed/e[1][0].population,
-                           "deaths":e[1][0].deaths/e[1][0].population,
-                            "vaccinated":e[1][0].vaccinated/e[1][0].population});
+            "confirmed":acc.confirmed/acc.population,
+             "deaths":acc.deaths/acc.population,
+              "vaccinated":acc.vaccinated/acc.population});
+            }
         });
         return arrRate;
     }
