@@ -13,9 +13,9 @@
 <body>
   <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <div class="logo" onclick="window.location.reload()">
+      <div class="logo" style="cursor: pointer;" onclick="window.location.reload()">
         <img src="src/ui-ux/images/logo.png" alt="COVID Data Analyzing Logo">
-        <span>COVID Data Analyzing</span>
+        <span>COVID Monitor</span>
       </div>
       <button class="nav-link active" id="nav-dashboard-tab" data-bs-toggle="tab" data-bs-target="#nav-dashboard"
         type="button" role="tab" aria-controls="nav-dashboard" aria-selected="true"><i class="bi bi-activity"></i>
@@ -33,15 +33,26 @@
 
   <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
-      <div class="text-center">
+      <div class="text-center d-none d-lg-flex">
         <img src="src/ui-ux/images/continents.png" class="rounded img-fluid" alt="Real-Time Dashboard">
       </div>
-      <div id="main-table" class="container table-responsive">
-        <table class="table table-striped">
+      <div id="main-table" class="container table-responsive d-lg-none">
+        <table class="table">
           <thead>
-            <tr id="main-header"></tr>
+            <tr id="main-header">
+              <th><i class="bi bi-geo-alt"></i> Continent</th>
+              <th><i class="bi bi-plus-circle"></i> New</th>
+              <th><i class="bi bi-emoji-dizzy"></i> Died</th>
+              <th><i class="bi bi-shield-shaded"></i> Vaccinated</th>
+            </tr>
           </thead>
-          <tbody id="main-body">
+          <tbody id="main-body" style="color: cornsilk; font-weight: bold;">
+            <tr id="europe" style="background-color: brown;"><td>Europe</td></tr>
+            <tr id="asia" style="background-color:orangered;"><td>Asia</td></tr>
+            <tr id="africa" style="background-color:gold;"><td>Africa</td></tr>
+            <tr id="north-america" style="background-color:limegreen;"><td>North America</td></tr>
+            <tr id="south-america" style="background-color: green;"><td>South America</td></tr>
+            <tr id="oceania" style="background-color:palevioletred;"><td>Oceania</td></tr>
           </tbody>
         </table>
       </div>
