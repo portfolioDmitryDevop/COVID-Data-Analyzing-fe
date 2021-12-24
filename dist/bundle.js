@@ -24807,6 +24807,7 @@ class DataProcessor {
     #parseObjCases(objCases){
         const arrCases = [];
         for (const key in objCases) {
+            
             arrCases.push({
                 "country": key,
                 "confirmed": objCases[key].All.confirmed,
