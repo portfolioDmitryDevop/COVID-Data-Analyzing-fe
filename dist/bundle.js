@@ -7523,6 +7523,106 @@ module.exports = styleTagTransform;
 
 /***/ }),
 
+/***/ "./src/config/servicesConfig.js":
+/*!**************************************!*\
+  !*** ./src/config/servicesConfig.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "dataProvider": () => (/* binding */ dataProvider)
+/* harmony export */ });
+/* harmony import */ var _services_m_mediaAPI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/m-mediaAPI */ "./src/services/m-mediaAPI.js");
+
+const url = "https://covid-api.mmediagroup.fr/v1/cases";
+const dataProvider = new _services_m_mediaAPI__WEBPACK_IMPORTED_MODULE_0__["default"](url);
+
+/***/ }),
+
+/***/ "./src/services/dataProcessor.js":
+/*!***************************************!*\
+  !*** ./src/services/dataProcessor.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ DataProcessor)
+/* harmony export */ });
+class DataProcessor {
+
+    #dataProvider;
+
+    constructor(dataProvider) {
+        this.#dataProvider = dataProvider;
+    }
+
+
+}
+
+/***/ }),
+
+/***/ "./src/services/m-mediaAPI.js":
+/*!************************************!*\
+  !*** ./src/services/m-mediaAPI.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ MMediaAPI)
+/* harmony export */ });
+class MMediaAPI {
+
+    #url;
+
+    constructor(url) {
+        if (!url) throw 'API URL is not specified.'
+        this.#url = url;
+    }
+
+}
+
+/***/ }),
+
+/***/ "./src/ui-ux/spinner.js":
+/*!******************************!*\
+  !*** ./src/ui-ux/spinner.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Spinner)
+/* harmony export */ });
+class Spinner {
+
+    #spinnerElement;
+
+    constructor(idSpinner) {
+        this.#spinnerElement = document.getElementById(idSpinner);
+        if (!this.#spinnerElement) {
+            throw `Wrong spinner id (${idSpinner})`;
+        }
+    }
+
+    start() {
+        this.#spinnerElement.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+    }
+
+    stop() {
+        this.#spinnerElement.innerHTML = '';
+    }
+
+}
+
+/***/ }),
+
 /***/ "data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27%3e%3ccircle r=%272%27 fill=%27%23fff%27/%3e%3c/svg%3e":
 /*!******************************************************************************************************************************************************!*\
   !*** data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27%3e%3ccircle r=%272%27 fill=%27%23fff%27/%3e%3c/svg%3e ***!
@@ -7862,9 +7962,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap_dist_js_bootstrap_bundle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap/dist/js/bootstrap.bundle */ "./node_modules/bootstrap/dist/js/bootstrap.bundle.js");
 /* harmony import */ var bootstrap_dist_js_bootstrap_bundle__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_js_bootstrap_bundle__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var bootstrap_icons_font_bootstrap_icons_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap-icons/font/bootstrap-icons.css */ "./node_modules/bootstrap-icons/font/bootstrap-icons.css");
+/* harmony import */ var _services_dataProcessor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/dataProcessor */ "./src/services/dataProcessor.js");
+/* harmony import */ var _ui_ux_spinner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui-ux/spinner */ "./src/ui-ux/spinner.js");
+/* harmony import */ var _config_servicesConfig__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./config/servicesConfig */ "./src/config/servicesConfig.js");
 
 
 
+
+
+
+
+// Creating required objects
+const dataProcessor = new _services_dataProcessor__WEBPACK_IMPORTED_MODULE_3__["default"](_config_servicesConfig__WEBPACK_IMPORTED_MODULE_5__.dataProvider);
+const spinner = new _ui_ux_spinner__WEBPACK_IMPORTED_MODULE_4__["default"]("spinner");
+
+/***** FUNCTIONS *****/
+
+// Show/hide spinner
+async function waitWithSpinner(awaitFunction) {
+    spinner.start();
+    try {
+        const result = await awaitFunction();
+        return result;
+    } finally {
+        spinner.stop()
+        
+    }
+}
 })();
 
 /******/ })()
