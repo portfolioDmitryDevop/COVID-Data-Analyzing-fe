@@ -1,0 +1,13 @@
+.logo span{
+    color: #fd5786;
+    font-weight: bolder;
+    font-size: 1.75em;
+    margin: 20  20  20  0;
+    display: inline;
+}
+
+.logo img {
+    width: 48px;
+    margin: 10 10 10 25;
+    display: inline;
+}
