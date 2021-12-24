@@ -1,12 +1,41 @@
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <title>COVID-Data-Analyzing</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/ui-ux/style.css">
+  <title>COVID Data Analyzing</title>
 </head>
+
 <body>
-    <script src="dist/bundle.js"></script>
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <div class="logo">
+          <img src="src/ui-ux/images/logo.png" alt="COVID Data Analyzing Logo">
+          <span>COVID Data Analyzing</span>
+        </div>
+        <button class="nav-link active" id="nav-dashboard-tab" data-bs-toggle="tab" data-bs-target="#nav-dashboard" type="button" role="tab" aria-controls="nav-dashboard" aria-selected="true"><i class="bi bi-activity"></i> Dashboard</button>
+        <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false"><i class="bi bi-clock-history"></i> History</button>
+        <button class="nav-link" id="nav-stat-tab" data-bs-toggle="tab" data-bs-target="#nav-stat" type="button" role="tab" aria-controls="nav-stat" aria-selected="false"><i class="bi bi-bar-chart"></i> Statistics</button>
+      </div>
+    </nav>
+    <div id="spinner" class="position-absolute top-50 start-50"></div>
+
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
+            1
+        </div>
+        <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
+            2 
+        </div>
+        <div class="tab-pane fade" id="nav-stat" role="tabpanel" aria-labelledby="nav-stat-tab">
+            3
+        </div>
+      </div>
+
+
+  <script src="dist/bundle.js"></script>
 </body>
+
 </html>
