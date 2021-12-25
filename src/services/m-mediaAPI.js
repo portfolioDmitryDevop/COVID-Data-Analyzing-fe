@@ -1,3 +1,5 @@
+import { removeTime } from "../utilities/extensions";
+
 const requestCases = "cases";
 const requestVaccines = "vaccines";
 const requestDeathHistory = "history?status=deaths";
@@ -45,13 +47,7 @@ export default class MMediaAPI {
     }
 
     #dataIsUpToDate(currentDate) {
-        return currentDate.withoutTime() > this.#lastHistoryUpdate.withoutTime();
+        return removeTime(currentDate) > removeTime(this.#lastHistoryUpdate);
     }
 
-}
-
-Date.prototype.withoutTime = function () {
-    var d = new Date(this);
-    d.setHours(0, 0, 0, 0);
-    return d;
 }
