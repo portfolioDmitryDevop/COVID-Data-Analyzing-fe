@@ -8,6 +8,8 @@ export default class DataProcessor {
         this.#dataProvider = dataProvider;
     }
 
+    /* STAT BY CONTINENT REQUEST */
+
     /**
      * 
      * @returns array[{"continent","confirmed","deaths","vaccinated"}];
@@ -26,14 +28,6 @@ export default class DataProcessor {
         const arrRate = this.#getArrRate(objContinent);
 
         return arrRate;
-    }
-
-    async getHistoryStatistics(from, to) {
-        const data = await this.#dataProvider.getHistoryData();
-        const arrCases = []; // { ISO-Code, Country, Confirmed, Deaths, Vaccine, from, to }
-        
-        console.log(data);
-
     }
 
     #parseObjCases(objCases){
@@ -86,5 +80,51 @@ export default class DataProcessor {
         return arrRate;
     }
 
+    /* HISTORY REQUEST */
+
+    async getHistoryStatistics(from, to) {
+        const data = await this.#dataProvider.getHistoryData();
+        const arrCases = []; 
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const statCase = this.#createStatCase(data[key], from, to);
+                if (statCase != null) arrCases.push(statCase);
+            }
+        }
+        return arrCases;
+    }
+
+    #createStatCase(data, from, to) {
+        const iso = data.All.abbreviation;
+        const country = data.All.country;
+        const confirmedDates = this.#createDatesArray(data.All.dates);
+
+        if (country != undefined) {
+            console.log(`${iso}, ${country}, ${confirmedDates}`);
+        }
+
+        // if (data.All.country != undefined) {
+        //     console.log(data.All);
+        //     // iso, country, confirmed, deaths, vaccine, from, to
+        //     const statCase = this.#createStatCase(data.All.abbreviation, 
+        //                                         data.All.country, 
+        //                                         data.All.dates[data.All.dates.lenght - 1],
+        //                                         0,
+        //                                         0,
+        //                                         from,
+        //                                         to);
+        //     console.log(statCase);
+        //     return statCase
+        // }
+    }
+
+    #createDatesArray(data) {
+        return JSON.parse(data);
+        // const dates = []
+        // for (const key in data) {
+        //     dates.push(key);
+        // }
+        // return dates;
+    }
 
 }
