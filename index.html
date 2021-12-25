@@ -11,21 +11,29 @@
 </head>
 
 <body>
-  <nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+  <nav class="navbar bg-light">
+    <div class="container">
       <div class="logo" style="cursor: pointer;" onclick="window.location.reload()">
-        <img src="src/ui-ux/images/logo.png" alt="COVID Data Analyzing Logo">
+        <img src="src/ui-ux/images/logo.png" alt="COVID Monitor Logo">
         <span>COVID Monitor</span>
       </div>
-      <button class="nav-link active" id="nav-dashboard-tab" data-bs-toggle="tab" data-bs-target="#nav-dashboard"
-        type="button" role="tab" aria-controls="nav-dashboard" aria-selected="true"><i class="bi bi-activity"></i>
-        Dashboard</button>
-      <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button"
-        role="tab" aria-controls="nav-history" aria-selected="false"><i class="bi bi-clock-history"></i> History
-        Rates</button>
-      <button class="nav-link" id="nav-stat-tab" data-bs-toggle="tab" data-bs-target="#nav-stat" type="button"
-        role="tab" aria-controls="nav-stat" aria-selected="false"><i class="bi bi-bar-chart"></i> Statistics by
-        Countries</button>
+      <div class="nav nav-tabs d-inline-flex" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-dashboard-tab" data-bs-toggle="tab" data-bs-target="#nav-dashboard"
+          type="button" role="tab" aria-controls="nav-dashboard" aria-selected="true" title="Real-Time Dashboard">
+          <i class="bi bi-activity"></i>
+          <div> Dashboard</div>
+        </button>
+        <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button"
+          role="tab" aria-controls="nav-history" aria-selected="false" title="History Rates">
+          <i class="bi bi-clock-history"></i>
+          <div> History</div>
+        </button>
+        <button class="nav-link" id="nav-stat-tab" data-bs-toggle="tab" data-bs-target="#nav-stat" type="button"
+          role="tab" aria-controls="nav-stat" aria-selected="false" title="Statistics by Countries">
+          <i class="bi bi-bar-chart"></i>
+          <div> Statistics</div>
+        </button>
+      </div>
     </div>
   </nav>
 
@@ -47,12 +55,24 @@
             </tr>
           </thead>
           <tbody id="main-body" style="color: cornsilk; font-weight: bold;">
-            <tr id="europe" style="background-color: brown;"><td>Europe</td></tr>
-            <tr id="asia" style="background-color:orangered;"><td>Asia</td></tr>
-            <tr id="africa" style="background-color:gold;"><td>Africa</td></tr>
-            <tr id="north-america" style="background-color:limegreen;"><td>North America</td></tr>
-            <tr id="south-america" style="background-color: green;"><td>South America</td></tr>
-            <tr id="oceania" style="background-color:palevioletred;"><td>Oceania</td></tr>
+            <tr id="europe" style="background-color:rgb(111, 181, 250);">
+              <td>Europe</td>
+            </tr>
+            <tr id="asia" style="background-color:orange;">
+              <td>Asia</td>
+            </tr>
+            <tr id="africa" style="background-color:gold;">
+              <td>Africa</td>
+            </tr>
+            <tr id="north-america" style="background-color:limegreen;">
+              <td>North America</td>
+            </tr>
+            <tr id="south-america" style="background-color: rgb(218, 108, 218);">
+              <td>South America</td>
+            </tr>
+            <tr id="oceania" style="background-color:rgb(252, 160, 236);">
+              <td>Oceania</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -61,7 +81,24 @@
       <form id="history-form">
         <div class="container">
           <div class="row">
-
+            <div class="col-sm">
+              <label class="form-label" for="dateFromHist">Date From: </label>
+              <input type="date" class="form-control" id="dateFromHist" name="fromDate">
+            </div>
+            <div class="col-sm">
+              <label class="form-label" for="dateToHist">Date To: </label>
+              <input type="date" class="form-control" id="dateToHist" name="toDate">
+            </div>
+            <div class="col-sm">
+              <label class="form-label" for="countriesNumHist">Countries Number: </label>
+              <select id="countriesNumHist" class="form-select">
+                <option value hidden disabled selected>--All countries--</option>
+              </select>
+            </div>
+            <div class="row">
+              <button class="col btn btn-outline-primary" type="submit">Show</button>
+              <button class="col btn btn-outline-secondary" type="reset">Reset</button>
+            </div>
           </div>
         </div>
       </form>
@@ -79,7 +116,23 @@
       <form id="stat-form">
         <div class="container">
           <div class="row">
-
+            <div class="col-sm">
+              <label class="form-label" for="dateFromHist">Date From: </label>
+              <input type="date" class="form-control" id="dateFromHist" name="fromDate">
+            </div>
+            <div class="col-sm">
+              <label class="form-label" for="dateToHist">Date To: </label>
+              <input type="date" class="form-control" id="dateToHist" name="toDate">
+            </div>
+            <div class="col-sm">
+              <label class="form-label" for="dateToHist">Countries: </label>
+              <select class="form-select" multiple aria-label="multiple select example">
+              </select>
+            </div>
+            <div class="row">
+              <button class="col btn btn-outline-primary" type="submit">Show</button>
+              <button class="col btn btn-outline-secondary" type="reset">Reset</button>
+            </div>
           </div>
         </div>
       </form>
@@ -95,7 +148,13 @@
     </div>
   </div>
 
-  <div></div>
+  <div class="navbar bg-light navbar-fixed-bottom">
+    <div class="container">
+      <a href="https://www.tel-ran.com/" style="text-decoration: none; color: crimson;">
+        2021 © Tel-Ran
+      </a>
+    </div>
+  </div>
 
   <script src="dist/bundle.js"></script>
 </body>
