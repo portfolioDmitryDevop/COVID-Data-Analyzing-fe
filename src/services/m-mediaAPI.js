@@ -1,11 +1,13 @@
 const requestCases = "cases";
 const requestVaccines = "vaccines";
-const requestHistory = "history?status=deaths";
+const requestDeathHistory = "history?status=deaths";
+const requestConfirmedHistory = "history?status=confirmed";
 
 export default class MMediaAPI {
 
     #url;
-    #historyData;
+    #historyDeathData;
+    #historyConfirmedData;
     #vaccinesData;
     #lastHistoryUpdate;
 
@@ -16,14 +18,16 @@ export default class MMediaAPI {
         this.#updateHistoryData();
     }
 
-    getHistoryData(){
+    async getHistoryData(){
         // Update data if needed before returning
-        if (!this.#dataIsUpToDate(new Date())) this.#updateHistoryData();
-        return this.#historyData;
+        if (!this.#dataIsUpToDate(new Date())) await this.#updateHistoryData();
+        return {death: this.#historyDeathData, confirmed: this.#historyConfirmedData};
     }
+
     getVaccinesData(){
         return this.#vaccinesData;
     }
+
     getCasesData(){
         return this.getData(requestCases);
     }
@@ -34,9 +38,10 @@ export default class MMediaAPI {
         return res;
     }
 
-    #updateHistoryData() {
-        this.#historyData = this.getData(requestHistory);
+    async #updateHistoryData() {
         this.#lastHistoryUpdate = new Date();
+        this.#historyDeathData = await this.getData(requestDeathHistory);
+        this.#historyConfirmedData = await this.getData(requestConfirmedHistory);
     }
 
     #dataIsUpToDate(currentDate) {

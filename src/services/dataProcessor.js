@@ -84,13 +84,14 @@ export default class DataProcessor {
 
     async getHistoryStatistics(from, to) {
         const data = await this.#dataProvider.getHistoryData();
+        console.log(data);
         const arrCases = []; 
-        for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-                const statCase = this.#createStatCase(data[key], from, to);
-                if (statCase != null) arrCases.push(statCase);
-            }
-        }
+        // for (const key in data) {
+        //     if (data.hasOwnProperty(key)) {
+        //         const statCase = this.#createStatCase(data[key], from, to);
+        //         if (statCase != null) arrCases.push(statCase);
+        //     }
+        // }
         return arrCases;
     }
 
