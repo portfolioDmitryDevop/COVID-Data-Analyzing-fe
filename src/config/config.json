@@ -1,0 +1,11 @@
+{
+    "pollingIntervalInSeconds": 60,
+    "continentColors": {
+        "europe": "rgb(111, 181, 250)",
+        "asia": "orange",
+        "africa": "gold",
+        "north america": "limegreen",
+        "south america": "rgb(218, 108, 218)",
+        "oceania": "rgb(252, 160, 236)"
+    }
+}

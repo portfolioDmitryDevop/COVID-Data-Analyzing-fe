@@ -5,9 +5,11 @@ import { convertDate, getPreviousDay, removeTime } from "../utilities/extensions
 export default class DataProcessor {
 
     #dataProvider;
+    #config;
 
-    constructor(dataProvider) {
+    constructor(dataProvider, config) {
         this.#dataProvider = dataProvider;
+        this.#config = config;
     }
 
     /* STAT BY CONTINENT REQUEST */

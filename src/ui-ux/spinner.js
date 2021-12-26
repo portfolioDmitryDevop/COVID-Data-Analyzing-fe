@@ -9,12 +9,22 @@ export default class Spinner {
         }
     }
 
-    start() {
+    #start() {
         this.#spinnerElement.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
     }
 
-    stop() {
+    #stop() {
         this.#spinnerElement.innerHTML = '';
     }
 
+    // Show/hide spinner
+    async wait(awaitFunction) {
+    this.#start();
+    try {
+        const result = await awaitFunction();
+        return result;
+    } finally {
+        this.#stop()
+    }
+}
 }
