@@ -28,15 +28,14 @@ export default class DataProcessor {
         const objContinent = _.groupBy(arrMerge, (e) => {
             return e.continent;
         });
+    
         const arrRate = this.#getArrRate(objContinent);
-
         return arrRate;
     }
 
     #parseObjCases(objCases){
         const arrCases = [];
         for (const key in objCases) {
-            
             arrCases.push({
                 "country": key,
                 "confirmed": objCases[key].All.confirmed,
@@ -88,66 +87,58 @@ export default class DataProcessor {
     async getHistoryStatistics(from, to) {
         this.#validateInputDates(from, to);
 
-        // If the second date is not specified - use the previous day
         const fromDate = convertDate(from);
-        const toDate = to != undefined ? convertDate(to) : convertDate(getPreviousDay(from));
+        const toDate = convertDate(getPreviousDay(from)); // From is excluded parameter
         const data = await this.#dataProvider.getHistoryData();
         const confirmed = data.confirmed;
         const death = data.death;
-
         const arrCases = []; 
 
         for (const key in confirmed) {
             if (confirmed.hasOwnProperty(key)) {
-                const statCase = this.#createStatCase(confirmed[key], death[key], fromDate, toDate);
+                const statCase = await this.#createStatCase(confirmed[key], death[key], fromDate, toDate);
                 if (statCase != null) arrCases.push(statCase);
             }
         }
         return arrCases;
     }
 
-    #createStatCase(confirmedData, deathData, from, to) {
+    async #createStatCase(confirmedData, deathData, from, to) {
         const country = confirmedData.All.country;
         if (country != undefined) {
             const population = confirmedData.All.population;
             const iso = confirmedData.All.abbreviation;
-            const confirmedDates = this.#parseDatesData(confirmedData.All.dates, population, from, to);
-            const deathDates = this.#parseDatesData(deathData.All.dates, population, from, to);
-            const statCaseDataObject = createStatDataObject(iso, country, confirmedDates, deathDates);
+            const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
+            const death = this.#parseDatesData(deathData.All.dates, population, from, to);
+            const vaccinatedCount = await this.#getVaccinatedCount(country);
+            const statCaseDataObject = createStatDataObject(iso, country, confirmed.percent, death.percent, vaccinatedCount / population, confirmed.amount, death.amount, vaccinatedCount);
             return statCaseDataObject
         } 
     }
 
-    #parseDatesData(data, population, from, to) {
-        const fromDate = this.#findTheNearestDate(data, from);
-        const toDate = this.#findTheNearestDate(data, to);
-        return (toDate - fromDate) / population;
+     async #getVaccinatedCount(country) {
+        const vaccinatedData = await this.#dataProvider.getVaccinesData();
+        const countryVaccinated = _.get(vaccinatedData, country);
+        return countryVaccinated != undefined ? countryVaccinated.All.people_vaccinated : 0;
     }
 
-    #findTheNearestDate(data, date) {
-        let count = data[date];
-        if (count == undefined) {
-            let prevDay = getPreviousDay(date);
-            do {
-                console.log(`No data for date ` + prevDay + ' : ' + count);
-                prevDay = getPreviousDay(date);
-                count = data[prevDay];
-            } while (count == undefined);
-
-            // let prevDay = getPreviousDay(date);
-            // while (count == undefined) {
-            //     console.log("Try to find data for " + prevDay);
-            //     count = data[prevDay];
-            //     prevDay = getPreviousDay(date);
-            // }
-        }
-        return count;
+    #parseDatesData(data, population, from, to) {
+        const count = data[to] - data[from];
+        return {percent: count / population, amount: count};
     }
 
     #validateInputDates(from, to) {
-        if (from == undefined) throw new Error("At least one date must be specified for a historical request.");
+        if (from == undefined || to == undefined) throw new Error("Both dates must be specified for a historical request.");
         if (removeTime(from).getTime() > removeTime(new Date()).getTime()) throw new Error("Historical requests for the future are not available.");
-        if (to != undefined) if (from >= to) throw new Error("From date can't be equal or higher than To date.");
+        if (from >= to) throw new Error("From date can't be equal or higher than To date.");
+        if (from < new Date('2020-01-22T00:00:00')) { throw new Error("There is no data on the epidemic earlier than 01/22/2020.") };
+    }
+
+    /* HISTORICAL REQUEST BY COUNTRIES */
+
+    async getHistoryStatisticsByCountries(countries, from, to) {
+        const allData = await this.getHistoryStatistics(from, to)
+        return _.filter(allData, function(o) { return countries.includes(o.country); });
     }
 
 

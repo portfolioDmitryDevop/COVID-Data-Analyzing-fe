@@ -30,6 +30,13 @@ export default class MMediaAPI {
         return this.#vaccinesData;
     }
 
+    // async getVaccinesData(country){
+    //     console.log(this.#vaccinesData);
+    //     if (this.#vaccinesData == undefined) this.#vaccinesData = await this.getData(requestVaccines);
+    //     const res = country != undefined ? this.#vaccinesData[country].people_vaccinated : this.#vaccinesData;
+    //     return res;
+    // }
+
     getCasesData(){
         return this.getData(requestCases);
     }

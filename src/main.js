@@ -33,20 +33,12 @@ function fillMainTable(continentsArr) {
 function fillMapData(continentsArr) {
 
 }
-async function getHistoryStatistics() {
-    const test = await dataProcessor.getHistoryStatistics(new Date('2021-10-17T13:24:00'), new Date('2021-12-26T13:24:00'));
-    // const test = dataProcessor.getHistoryStatistics(new Date('2021-12-24T13:24:00'));
-    test.forEach(element => {
-        console.log(element);
-    });
-}
-
-// getHistoryStatistics();
-
 /***** ACTIONS *****/
+
 spinner.wait(async () => {
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillMainTable(continentsData);
     fillMapData(continentsData);
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
+
