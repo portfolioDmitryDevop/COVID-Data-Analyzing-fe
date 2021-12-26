@@ -4,13 +4,19 @@ export default class TableHandler {
     #bodyElement;
 
     constructor(headerId, bodyId, keys, sortFun) {
-        this.#keys = keys;
 
+        this.#keys = keys;
         this.#bodyElement = document.getElementById(bodyId);
         if (!this.#bodyElement) {
             throw 'Wrong body id';
         }
-
+        if (headerId) {
+            const headerElement = document.getElementById(headerId);
+            if (!headerElement) {
+                throw 'Wrong header id';
+            }
+            fillTableHeader(headerElement, keys, sortFun);
+        }
         if (sortFun){
             const columnsEl = document.querySelectorAll(`#${headerId} th`);
             columnsEl.forEach(c => c.addEventListener('click', 
@@ -36,18 +42,13 @@ export default class TableHandler {
     }
 }
 
-// function getColumns(keys, sortFnName){
-//     return keys.map(key => {
-//         return !sortFnName ? `<th>${key}</th>` :
-//          `<th style="cursor: pointer" onclick="${sortFnName}('${key}')">${key}</th>`
-//     }).join('');
-// }
-
-function getColumns(keys, sortFun, remFunName) {
-    let res = keys.map(key => {
+function fillTableHeader(headerElement, keys, sortFun) {
+    headerElement.innerHTML = getColumns(keys, sortFun);
+}
+function getColumns(keys, sortFun) {
+    return keys.map(key => {
         return !sortFun ? `<th>${key}</th>` 
             : `<th style="cursor: pointer">${key}</th>`;
     })
     .join('');
-    return remFunName ? res.concat(`<th></th>`) : res;
 }

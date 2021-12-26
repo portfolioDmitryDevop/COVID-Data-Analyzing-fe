@@ -11,6 +11,9 @@
 </head>
 
 <body>
+  <div class="row justify-content-sm-center mb-3">
+    <div id="alert"></div>
+  </div>
   <nav class="navbar bg-light">
     <div class="container">
       <div class="logo" style="cursor: pointer;" onclick="window.location.reload()">
@@ -54,7 +57,7 @@
               <th><i class="bi bi-shield-shaded"></i> Vaccinated</th>
             </tr>
           </thead>
-          <tbody id="main-body" style="color: cornsilk; font-weight: bold;">            
+          <tbody id="main-body" style="color: cornsilk; font-weight: bold;">
           </tbody>
         </table>
       </div>
@@ -73,9 +76,8 @@
             </div>
             <div class="col-sm">
               <label class="form-label" for="countriesNumHist">Countries Number: </label>
-              <select id="countriesNumHist" class="form-select">
-                <option value hidden disabled selected>--All countries--</option>
-              </select>
+              <input id="countriesNumHist" type="number" class="form-control" 
+              placeholder="All countries" name="countriesNum">
             </div>
             <div class="row">
               <button class="col btn btn-outline-primary" type="submit">Show</button>

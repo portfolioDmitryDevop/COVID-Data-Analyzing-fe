@@ -5,19 +5,23 @@ import DataProcessor from "./services/dataProcessor";
 import Spinner from "./ui-ux/spinner";
 import { dataProvider } from "./config/servicesConfig";
 import TableHandler from "./ui-ux/table-handler";
-import Navigator from "./ui-ux/navigator";
 import config from "./config/config.json";
+import FormHandler from "./ui-ux/form-handler";
+import { objToExponential } from "./utilities/extensions";
 
-// Creating required objects
+/***** OBJECTS *****/
 const dataProcessor = new DataProcessor(dataProvider, config);
 const spinner = new Spinner("spinner");
-const navigator = new Navigator('nav-tab');
-const mainTableHandler = new TableHandler(undefined, 'main-body', 
+const mainTableHandler = new TableHandler(undefined, 'main-body',
     ['continent', 'confirmed', 'deaths', 'vaccinated']);
+const historyTableHandler = new TableHandler('history-header', 'history-body',
+    ['country', 'confirmed', 'deaths', 'vaccinated']);
+const statTableHandler = new TableHandler('stat-header', 'stat-body',
+    ['country', 'confirmed', 'deaths', 'vaccinated']);
+const historyFormHandler = new FormHandler('history-form', 'alert');
+const statFormHandler = new FormHandler('stat-form', 'alert');
 
 /***** FUNCTIONS *****/
-// const res = dataProcessor.getStatisticsContinents();
-// res.then((element) => console.log(element));
 async function poller() {
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillMainTable(continentsData);
@@ -27,19 +31,23 @@ function fillMainTable(continentsArr) {
     mainTableHandler.clear();
     continentsArr.forEach(c => {
         const color = config.continentColors[c.continent.toLowerCase()];
-        mainTableHandler.addRowColored(c, color);
+        mainTableHandler.addRowColored(objToExponential(c), color);
     });
 }
 function fillMapData(continentsArr) {
 
 }
-
-async function fillHistroryTableAll(){
-    const res = await dataProcessor.getHistoryStatistics(new Date("2021-12-24"),new Date("2021-12-25"));
-    console.log(res);
+function fillHistTable(from, to, num) {
+    spinner.wait(async () => {
+        let histArr = await dataProcessor.getHistoryStatistics(from, to);
+        historyTableHandler.clear();
+        histArr.forEach(obj => {
+            historyTableHandler.addRow(objToExponential(obj));
+        });
+    });
 }
-/***** ACTIONS *****/
 
+/***** ACTIONS *****/
 spinner.wait(async () => {
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillMainTable(continentsData);
@@ -47,5 +55,5 @@ spinner.wait(async () => {
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
 
-fillHistroryTableAll();
-
+historyFormHandler.addHandler(async data => 
+    fillHistTable(data.fromDate, data.toDate, data.countriesNum));
