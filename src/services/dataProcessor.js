@@ -93,6 +93,7 @@ export default class DataProcessor {
 
         const fromDate = convertDate(from);
         const toDate = convertDate(getPreviousDay(to)); // To is excluded parameter
+        // const toDate = convertDate(to);
         const data = await this.#dataProvider.getHistoryData();
         const confirmed = data.confirmed;
         const death = data.death;
@@ -115,15 +116,15 @@ export default class DataProcessor {
             const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
             const death = this.#parseDatesData(deathData.All.dates, population, from, to);
             const vaccinatedCount = await this.#getVaccinatedCount(country);
+
             const statCaseDataObject = createStatDataObject(iso, country, confirmed.percent, death.percent, vaccinatedCount / population, confirmed.amount, death.amount, vaccinatedCount);
             return statCaseDataObject
         }
     }
 
     async #getVaccinatedCount(country) {
-        const vaccinatedData = await this.#dataProvider.getVaccinesData();
-        const countryVaccinated = _.get(vaccinatedData, country);
-        return countryVaccinated != undefined ? countryVaccinated.All.people_vaccinated : 0;
+        const vaccinatedData =await this.#dataProvider.getVaccinesData(country);
+        return vaccinatedData != undefined ? vaccinatedData.All.people_vaccinated : 0;
     }
 
     #parseDatesData(data, population, from, to) {
