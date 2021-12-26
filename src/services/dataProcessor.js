@@ -92,8 +92,8 @@ export default class DataProcessor {
         this.#validateInputDates(from, to);
 
         const fromDate = convertDate(from);
-        const toDate = convertDate(to);
-        // const toDate = convertDate(getPreviousDay(from)); // From is excluded parameter
+        const toDate = convertDate(getPreviousDay(to)); // To is excluded parameter
+        // const toDate = convertDate(to);
         const data = await this.#dataProvider.getHistoryData();
         const confirmed = data.confirmed;
         const death = data.death;

@@ -8,6 +8,13 @@
 
 .logo img {
     width: 48px;
-    margin: 10 10 10 25;
+    margin: 10 10 10 50;
     display: inline;
 }
+
+.footer a {
+    font-size: small;
+    text-decoration: none; 
+    color: #fd5786;
+}
+
