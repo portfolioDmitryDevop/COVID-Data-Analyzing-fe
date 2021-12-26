@@ -111,9 +111,9 @@ export default class DataProcessor {
             const iso = confirmedData.All.abbreviation;
             const confirmedDates = this.#parseDatesData(confirmedData.All.dates, population, from, to);
             const deathDates = this.#parseDatesData(deathData.All.dates, population, from, to);
-            const statCaseDataObject = createStatDataObject(iso, country, confirmedDates, deathDates, from, to);
+            const statCaseDataObject = createStatDataObject(iso, country, confirmedDates, deathDates);
             return statCaseDataObject
-        }
+        } 
     }
 
     #parseDatesData(data, population, from, to) {
@@ -126,11 +126,18 @@ export default class DataProcessor {
         let count = data[date];
         if (count == undefined) {
             let prevDay = getPreviousDay(date);
-            while (count == undefined) {
-                console.log("Try to find data for " + prevDay);
-                count = data[prevDay];
+            do {
+                console.log(`No data for date ` + prevDay + ' : ' + count);
                 prevDay = getPreviousDay(date);
-            }
+                count = data[prevDay];
+            } while (count == undefined);
+
+            // let prevDay = getPreviousDay(date);
+            // while (count == undefined) {
+            //     console.log("Try to find data for " + prevDay);
+            //     count = data[prevDay];
+            //     prevDay = getPreviousDay(date);
+            // }
         }
         return count;
     }
