@@ -1,4 +1,5 @@
 import _ from "lodash";
+import createStatDataObject from "../models/StatCase";
 import { convertDate, getPreviousDay, removeTime } from "../utilities/extensions";
 
 export default class DataProcessor {
@@ -100,28 +101,25 @@ export default class DataProcessor {
                 if (statCase != null) arrCases.push(statCase);
             }
         }
-
         return arrCases;
     }
 
     #createStatCase(confirmedData, deathData, from, to) {
-        const population = confirmedData.All.population;
-        const iso = confirmedData.All.abbreviation;
         const country = confirmedData.All.country;
-        const confirmedDates = this.#parseDatesData(confirmedData.All.dates, population, from, to);
-        const deathDates = this.#parseDatesData(deathData.All.dates, population, from, to);
-        
         if (country != undefined) {
-            const statCase = this.#createStatCase(iso, country, confirmedDates, deathDates, from, to);
-            console.log(statCase);
-            return statCase
+            const population = confirmedData.All.population;
+            const iso = confirmedData.All.abbreviation;
+            const confirmedDates = this.#parseDatesData(confirmedData.All.dates, population, from, to);
+            const deathDates = this.#parseDatesData(deathData.All.dates, population, from, to);
+            const statCaseDataObject = createStatDataObject(iso, country, confirmedDates, deathDates, from, to);
+            return statCaseDataObject
         }
     }
 
     #parseDatesData(data, population, from, to) {
-        const first = this.#findTheNearestDate(data, from);
-        const second = this.#findTheNearestDate(data, to);
-        return (second - first) / population;
+        const fromDate = this.#findTheNearestDate(data, from);
+        const toDate = this.#findTheNearestDate(data, to);
+        return (toDate - fromDate) / population;
     }
 
     #findTheNearestDate(data, date) {
@@ -129,8 +127,9 @@ export default class DataProcessor {
         if (count == undefined) {
             let prevDay = getPreviousDay(date);
             while (count == undefined) {
+                console.log("Try to find data for " + prevDay);
                 count = data[prevDay];
-                getPreviousDay(date);
+                prevDay = getPreviousDay(date);
             }
         }
         return count;
@@ -138,7 +137,7 @@ export default class DataProcessor {
 
     #validateInputDates(from, to) {
         if (from == undefined) throw new Error("At least one date must be specified for a historical request.");
-        if (removeTime(from).getTime() == removeTime(new Date()).getTime()) throw new Error("History request for today is not available.");
+        if (removeTime(from).getTime() > removeTime(new Date()).getTime()) throw new Error("Historical requests for the future are not available.");
         if (to != undefined) if (from >= to) throw new Error("From date can't be equal or higher than To date.");
     }
 

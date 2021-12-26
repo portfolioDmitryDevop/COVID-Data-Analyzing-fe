@@ -19,12 +19,19 @@ async function waitWithSpinner(awaitFunction) {
         return result;
     } finally {
         spinner.stop()
-        
+
     }
 }
 
 // const res = dataProcessor.getStatisticsContinents();
 // res.then((element) => console.log(element));
-const test = dataProcessor.getHistoryStatistics(new Date('2021-10-17T13:24:00'), new Date('2021-11-17T13:24:00'));
-// const test = dataProcessor.getHistoryStatistics(new Date('2021-12-24T13:24:00'));
-console.log(test);
+
+async function getHistoryStatistics() {
+    const test = await dataProcessor.getHistoryStatistics(new Date('2021-10-17T13:24:00'), new Date('2021-12-26T13:24:00'));
+    // const test = dataProcessor.getHistoryStatistics(new Date('2021-12-24T13:24:00'));
+    test.forEach(element => {
+        console.log(element);
+    });
+}
+
+getHistoryStatistics();
