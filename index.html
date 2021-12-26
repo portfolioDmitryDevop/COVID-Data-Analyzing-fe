@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <nav class="navbar bg-light">
+  <nav class="navbar bg-light p-0">
     <div class="container">
       <div class="logo" style="cursor: pointer;" onclick="window.location.reload()">
         <img src="src/ui-ux/images/logo.png" alt="COVID Monitor Logo">
@@ -20,18 +20,15 @@
       <div class="nav nav-tabs d-inline-flex" id="nav-tab" role="tablist">
         <button class="nav-link active" id="nav-dashboard-tab" data-bs-toggle="tab" data-bs-target="#nav-dashboard"
           type="button" role="tab" aria-controls="nav-dashboard" aria-selected="true" title="Real-Time Dashboard">
-          <i class="bi bi-activity"></i>
-          <div> Dashboard</div>
+          <i class="bi bi-activity"></i><span class="d-none d-sm-block">Dashboard</span>
         </button>
         <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button"
           role="tab" aria-controls="nav-history" aria-selected="false" title="History Rates">
-          <i class="bi bi-clock-history"></i>
-          <div> History</div>
+          <i class="bi bi-clock-history"></i><span class="d-none d-sm-block">History</span> 
         </button>
         <button class="nav-link" id="nav-stat-tab" data-bs-toggle="tab" data-bs-target="#nav-stat" type="button"
           role="tab" aria-controls="nav-stat" aria-selected="false" title="Statistics by Countries">
-          <i class="bi bi-bar-chart"></i>
-          <div> Statistics</div>
+          <i class="bi bi-bar-chart"></i><span class="d-none d-sm-block">Statistics</span>
         </button>
       </div>
     </div>
@@ -39,22 +36,45 @@
 
   <div id="spinner" class="position-absolute top-50 start-50"></div>
 
-  <div class="tab-content" id="nav-tabContent">
+  <div class="tab-content mt-3" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
       <div class="text-center d-none d-lg-flex">
         <img src="src/ui-ux/images/continents.png" class="rounded img-fluid" alt="Real-Time Dashboard">
       </div>
       <div id="main-table" class="container table-responsive d-lg-none">
+
+        <!-- Для примера, может попробуем так? -->
+        <div class="container">
+          <div class="row m-lg-auto">
+            <div class="col-12 col-sm-6 bg-light rounded-3">
+              <ul class="list-unstyled p-1">
+                <li><i class="bi bi-geo-alt"></i> Asia</li>
+                <li><i class="bi bi-check-circle"></i> 35345435</li> 
+                <li><i class="bi bi-emoji-dizzy"></i> 545454543</li> 
+                <li><i class="bi bi-shield-shaded"></i> 545435345</li> 
+              </ul>
+            </div>
+            <div class="col-12 col-sm-6 bg-light rounded-3">
+              <ul class="list-unstyled p-1">
+                <li><i class="bi bi-geo-alt"></i> Asia</li>
+                <li><i class="bi bi-check-circle"></i> 35345435</li> 
+                <li><i class="bi bi-emoji-dizzy"></i> 545454543</li> 
+                <li><i class="bi bi-shield-shaded"></i> 545435345</li> 
+              </ul>
+            </div>
+          </div>
+      </div>
+
         <table class="table">
           <thead>
             <tr id="main-header">
               <th><i class="bi bi-geo-alt"></i> Continent</th>
-              <th><i class="bi bi-plus-circle"></i> New</th>
+              <th><i class="bi bi-check-circle"></i> Confirmed</th>
               <th><i class="bi bi-emoji-dizzy"></i> Died</th>
               <th><i class="bi bi-shield-shaded"></i> Vaccinated</th>
             </tr>
           </thead>
-          <tbody id="main-body" style="color: cornsilk; font-weight: bold;">            
+          <tbody id="main-body" style="color: cornsilk; font-weight: bold;">
           </tbody>
         </table>
       </div>
@@ -63,23 +83,25 @@
       <form id="history-form">
         <div class="container">
           <div class="row">
-            <div class="col-sm">
-              <label class="form-label" for="dateFromHist">Date From: </label>
+            <div class="col-sm mb-2">
+              <label class="form-label fw-bold" for="dateFromHist">Date From: </label>
               <input type="date" class="form-control" id="dateFromHist" name="fromDate">
             </div>
-            <div class="col-sm">
-              <label class="form-label" for="dateToHist">Date To: </label>
+            <div class="col-sm mb-2">
+              <label class="form-label fw-bold" for="dateToHist">Date To: </label>
               <input type="date" class="form-control" id="dateToHist" name="toDate">
             </div>
-            <div class="col-sm">
-              <label class="form-label" for="countriesNumHist">Countries Number: </label>
+            <div class="col-sm mb-2">
+              <label class="form-label fw-bold" for="countriesNumHist">Countries Number: </label>
               <select id="countriesNumHist" class="form-select">
                 <option value hidden disabled selected>--All countries--</option>
               </select>
             </div>
-            <div class="row">
-              <button class="col btn btn-outline-primary" type="submit">Show</button>
-              <button class="col btn btn-outline-secondary" type="reset">Reset</button>
+          </div>
+          <div class="row mt-3">
+            <div class="col">
+              <button class="col-12 col-sm-3 btn btn-success mb-2 mb-sm-0" type="submit">Show</button>
+              <button class="col-12 col-sm-3 btn btn-outline-secondary" type="reset">Reset</button>
             </div>
           </div>
         </div>
@@ -98,22 +120,23 @@
       <form id="stat-form">
         <div class="container">
           <div class="row">
-            <div class="col-sm">
-              <label class="form-label" for="dateFromHist">Date From: </label>
+            <div class="col-sm mb-2">
+              <label class="form-label fw-bold" for="dateFromHist">Date From: </label>
               <input type="date" class="form-control" id="dateFromHist" name="fromDate">
             </div>
-            <div class="col-sm">
-              <label class="form-label" for="dateToHist">Date To: </label>
+            <div class="col-sm mb-2">
+              <label class="form-label fw-bold" for="dateToHist">Date To: </label>
               <input type="date" class="form-control" id="dateToHist" name="toDate">
             </div>
-            <div class="col-sm">
-              <label class="form-label" for="dateToHist">Countries: </label>
-              <select class="form-select" multiple aria-label="multiple select example">
-              </select>
+            <div class="col-sm mb-2">
+              <label class="form-label fw-bold" for="dateToHist">Countries: </label>
+              <select class="form-select" multiple aria-label="multiple select example"></select>
             </div>
-            <div class="row">
-              <button class="col btn btn-outline-primary" type="submit">Show</button>
-              <button class="col btn btn-outline-secondary" type="reset">Reset</button>
+          </div>
+          <div class="row mt-3">
+            <div class="col">
+              <button class="col-12 col-sm-3 btn btn-success mb-2 mb-sm-0" type="submit">Show</button>
+              <button class="col-12 col-sm-3 btn btn-outline-secondary" type="reset">Reset</button>
             </div>
           </div>
         </div>
@@ -130,13 +153,15 @@
     </div>
   </div>
 
-  <div class="navbar bg-light navbar-fixed-bottom">
-    <div class="container">
-      <a href="https://www.tel-ran.com/" style="text-decoration: none; color: crimson;">
-        2021 © Tel-Ran
-      </a>
+  <footer class="mt-auto position-sticky top-100">
+    <div class="navbar bg-light navbar-fixed-bottom">
+      <div class="container footer">
+        <a href="https://www.tel-ran.com/" target="_blank">2021 © Tel-Ran</a>
+        <a href="https://github.com/M-Media-Group/Covid-19-API" target="_blank">Based on <i class="bi bi-github"></i>
+          M-Media Group API</a>
+      </div>
     </div>
-  </div>
+  </footer>
 
   <script src="dist/bundle.js"></script>
 </body>
