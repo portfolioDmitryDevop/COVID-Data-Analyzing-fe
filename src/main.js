@@ -33,6 +33,11 @@ function fillMainTable(continentsArr) {
 function fillMapData(continentsArr) {
 
 }
+
+async function fillHistroryTableAll(){
+    const res = await dataProcessor.getHistoryStatistics(new Date("2021-12-24"),new Date("2021-12-25"));
+    console.log(res);
+}
 /***** ACTIONS *****/
 
 spinner.wait(async () => {
@@ -41,4 +46,6 @@ spinner.wait(async () => {
     fillMapData(continentsData);
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
+
+fillHistroryTableAll();
 

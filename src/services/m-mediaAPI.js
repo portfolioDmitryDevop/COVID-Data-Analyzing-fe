@@ -26,16 +26,14 @@ export default class MMediaAPI {
         return {death: this.#historyDeathData, confirmed: this.#historyConfirmedData};
     }
 
-    getVaccinesData(){
-        return this.#vaccinesData;
-    }
-
-    // async getVaccinesData(country){
-    //     console.log(this.#vaccinesData);
-    //     if (this.#vaccinesData == undefined) this.#vaccinesData = await this.getData(requestVaccines);
-    //     const res = country != undefined ? this.#vaccinesData[country].people_vaccinated : this.#vaccinesData;
-    //     return res;
+    // getVaccinesData(){
+    //     return this.#vaccinesData;
     // }
+
+    async getVaccinesData(country){
+        const vac = await this.#vaccinesData;
+        return country!=undefined ? _.get( vac, country) : vac;
+    }
 
     getCasesData(){
         return this.getData(requestCases);
