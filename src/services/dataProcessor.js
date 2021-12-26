@@ -1,4 +1,6 @@
 import _ from "lodash";
+import createStatDataObject from "../models/StatCase";
+import { convertDate, getPreviousDay, removeTime } from "../utilities/extensions";
 
 export default class DataProcessor {
 
@@ -8,12 +10,13 @@ export default class DataProcessor {
         this.#dataProvider = dataProvider;
     }
 
+    /* STAT BY CONTINENT REQUEST */
+
     /**
      * 
      * @returns array[{"continent","confirmed","deaths","vaccinated"}];
      */
     async getStatisticsContinents() {
-        
         const objCases = await this.#dataProvider.getCasesData();
         const arrCases = this.#parseObjCases(objCases);
         const objVaccines = await this.#dataProvider.getVaccinesData();
@@ -57,29 +60,92 @@ export default class DataProcessor {
     #getArrRate(objContinent){
         const arrRate = [];
         Object.entries(objContinent)
-        .forEach((e) => { 
-            const acc = {population:0, confirmed:0, deaths:0, vaccinated:0};
-            e[1].forEach((v) => {
-                if(v.continent === undefined) {
-                    return;
-                }
-                let population = (v.population === undefined) ? 0 : v.population;
-                let vaccinated = (v.vaccinated === undefined) ? 0 : v.vaccinated;
-                let confirmed = (v.confirmed === undefined) ? 0 : v.confirmed;
-                let deaths = (v.deaths === undefined) ? 0 : v.deaths;
-                acc.population += population;
-                acc.confirmed += confirmed;
-                acc.deaths += deaths;
-                acc.vaccinated += vaccinated;
-            })
-            if(e[0]!='undefined'){
-            arrRate.push({ "continent":e[0],
-            "confirmed":acc.confirmed/acc.population,
-             "deaths":acc.deaths/acc.population,
-              "vaccinated":acc.vaccinated/acc.population});
-            }
+        .forEach((e) => {
+            e[1].reduce((r,v) => {
+                v.population = (v.population === undefined) ? 0 : v.population;
+                v.vaccinated = (v.vaccinated === undefined) ? 0 : v.vaccinated;
+                v.confirmed = (v.confirmed === undefined) ? 0 : v.vaccinated;
+                v.deaths = (v.deaths === undefined) ? 0 : v.vaccinated;
+                
+                r.population=v.population+r.population;
+                r.confirmed=v.confirmed+r.confirmed;
+                r.deaths=v.deaths+r.deaths;
+                r.vaccinated=v.vaccinated+r.vaccinated;
+                return r;
+            });
+            arrRate.push({  "continent":e[0],
+                            "confirmed":e[1][0].confirmed/e[1][0].population,
+                            "deaths":e[1][0].deaths/e[1][0].population,
+                            "vaccinated":e[1][0].vaccinated/e[1][0].population});
         });
         return arrRate;
+    }
+
+    /* HISTORICAL REQUEST */
+
+    async getHistoryStatistics(from, to) {
+        this.#validateInputDates(from, to);
+
+        // If the second date is not specified - use the previous day
+        const fromDate = convertDate(from);
+        const toDate = to != undefined ? convertDate(to) : convertDate(getPreviousDay(from));
+        const data = await this.#dataProvider.getHistoryData();
+        const confirmed = data.confirmed;
+        const death = data.death;
+
+        const arrCases = []; 
+
+        for (const key in confirmed) {
+            if (confirmed.hasOwnProperty(key)) {
+                const statCase = this.#createStatCase(confirmed[key], death[key], fromDate, toDate);
+                if (statCase != null) arrCases.push(statCase);
+            }
+        }
+        return arrCases;
+    }
+
+    #createStatCase(confirmedData, deathData, from, to) {
+        const country = confirmedData.All.country;
+        if (country != undefined) {
+            const population = confirmedData.All.population;
+            const iso = confirmedData.All.abbreviation;
+            const confirmedDates = this.#parseDatesData(confirmedData.All.dates, population, from, to);
+            const deathDates = this.#parseDatesData(deathData.All.dates, population, from, to);
+            const statCaseDataObject = createStatDataObject(iso, country, confirmedDates, deathDates);
+            return statCaseDataObject
+        } 
+    }
+
+    #parseDatesData(data, population, from, to) {
+        const fromDate = this.#findTheNearestDate(data, from);
+        const toDate = this.#findTheNearestDate(data, to);
+        return (toDate - fromDate) / population;
+    }
+
+    #findTheNearestDate(data, date) {
+        let count = data[date];
+        if (count == undefined) {
+            let prevDay = getPreviousDay(date);
+            do {
+                console.log(`No data for date ` + prevDay + ' : ' + count);
+                prevDay = getPreviousDay(date);
+                count = data[prevDay];
+            } while (count == undefined);
+
+            // let prevDay = getPreviousDay(date);
+            // while (count == undefined) {
+            //     console.log("Try to find data for " + prevDay);
+            //     count = data[prevDay];
+            //     prevDay = getPreviousDay(date);
+            // }
+        }
+        return count;
+    }
+
+    #validateInputDates(from, to) {
+        if (from == undefined) throw new Error("At least one date must be specified for a historical request.");
+        if (removeTime(from).getTime() > removeTime(new Date()).getTime()) throw new Error("Historical requests for the future are not available.");
+        if (to != undefined) if (from >= to) throw new Error("From date can't be equal or higher than To date.");
     }
 
 
