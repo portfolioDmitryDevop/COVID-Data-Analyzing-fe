@@ -14,11 +14,8 @@ export default class DataProcessor {
 
     /* STAT BY CONTINENT REQUEST */
 
-    /**
-     * 
-     * @returns array[{"continent","confirmed","deaths","vaccinated"}];
-     */
     async getStatisticsContinents() {
+
         const objCases = await this.#dataProvider.getCasesData();
         const arrCases = this.#parseObjCases(objCases);
         const objVaccines = await this.#dataProvider.getVaccinesData();
@@ -28,14 +25,15 @@ export default class DataProcessor {
         const objContinent = _.groupBy(arrMerge, (e) => {
             return e.continent;
         });
-    
         const arrRate = this.#getArrRate(objContinent);
+
         return arrRate;
     }
 
-    #parseObjCases(objCases){
+    #parseObjCases(objCases) {
         const arrCases = [];
         for (const key in objCases) {
+
             arrCases.push({
                 "country": key,
                 "confirmed": objCases[key].All.confirmed,
@@ -47,7 +45,7 @@ export default class DataProcessor {
         return arrCases;
     }
 
-    #parseObjVaccines(objVaccines){
+    #parseObjVaccines(objVaccines) {
         const arrVaccines = [];
         for (const key in objVaccines) {
             arrVaccines.push({
@@ -58,27 +56,33 @@ export default class DataProcessor {
         return arrVaccines;
     }
 
-    #getArrRate(objContinent){
+    #getArrRate(objContinent) {
         const arrRate = [];
         Object.entries(objContinent)
-        .forEach((e) => {
-            e[1].reduce((r,v) => {
-                v.population = (v.population === undefined) ? 0 : v.population;
-                v.vaccinated = (v.vaccinated === undefined) ? 0 : v.vaccinated;
-                v.confirmed = (v.confirmed === undefined) ? 0 : v.vaccinated;
-                v.deaths = (v.deaths === undefined) ? 0 : v.vaccinated;
-                
-                r.population=v.population+r.population;
-                r.confirmed=v.confirmed+r.confirmed;
-                r.deaths=v.deaths+r.deaths;
-                r.vaccinated=v.vaccinated+r.vaccinated;
-                return r;
+            .forEach((e) => {
+                const acc = { population: 0, confirmed: 0, deaths: 0, vaccinated: 0 };
+                e[1].forEach((v) => {
+                    if (v.continent === undefined) {
+                        return;
+                    }
+                    let population = (v.population === undefined) ? 0 : v.population;
+                    let vaccinated = (v.vaccinated === undefined) ? 0 : v.vaccinated;
+                    let confirmed = (v.confirmed === undefined) ? 0 : v.confirmed;
+                    let deaths = (v.deaths === undefined) ? 0 : v.deaths;
+                    acc.population += population;
+                    acc.confirmed += confirmed;
+                    acc.deaths += deaths;
+                    acc.vaccinated += vaccinated;
+                })
+                if (e[0] != 'undefined') {
+                    arrRate.push({
+                        "continent": e[0],
+                        "confirmed": acc.confirmed / acc.population,
+                        "deaths": acc.deaths / acc.population,
+                        "vaccinated": acc.vaccinated / acc.population
+                    });
+                }
             });
-            arrRate.push({  "continent":e[0],
-                            "confirmed":e[1][0].confirmed/e[1][0].population,
-                            "deaths":e[1][0].deaths/e[1][0].population,
-                            "vaccinated":e[1][0].vaccinated/e[1][0].population});
-        });
         return arrRate;
     }
 
@@ -92,7 +96,7 @@ export default class DataProcessor {
         const data = await this.#dataProvider.getHistoryData();
         const confirmed = data.confirmed;
         const death = data.death;
-        const arrCases = []; 
+        const arrCases = [];
 
         for (const key in confirmed) {
             if (confirmed.hasOwnProperty(key)) {
@@ -113,10 +117,10 @@ export default class DataProcessor {
             const vaccinatedCount = await this.#getVaccinatedCount(country);
             const statCaseDataObject = createStatDataObject(iso, country, confirmed.percent, death.percent, vaccinatedCount / population, confirmed.amount, death.amount, vaccinatedCount);
             return statCaseDataObject
-        } 
+        }
     }
 
-     async #getVaccinatedCount(country) {
+    async #getVaccinatedCount(country) {
         const vaccinatedData = await this.#dataProvider.getVaccinesData();
         const countryVaccinated = _.get(vaccinatedData, country);
         return countryVaccinated != undefined ? countryVaccinated.All.people_vaccinated : 0;
@@ -124,7 +128,7 @@ export default class DataProcessor {
 
     #parseDatesData(data, population, from, to) {
         const count = data[to] - data[from];
-        return {percent: count / population, amount: count};
+        return { percent: count / population, amount: count };
     }
 
     #validateInputDates(from, to) {
@@ -138,7 +142,7 @@ export default class DataProcessor {
 
     async getHistoryStatisticsByCountries(countries, from, to) {
         const allData = await this.getHistoryStatistics(from, to)
-        return _.filter(allData, function(o) { return countries.includes(o.country); });
+        return _.filter(allData, function (o) { return countries.includes(o.country); });
     }
 
 
