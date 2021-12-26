@@ -10,13 +10,11 @@ export default class MMediaAPI {
     #url;
     #historyDeathData;
     #historyConfirmedData;
-    #vaccinesData;
     #lastHistoryUpdate;
 
     constructor(url) {
         if (!url) throw 'API URL is not specified.'
         this.#url = url;
-        this.#vaccinesData = this.getData(requestVaccines);
         this.#updateHistoryData();
     }
 
@@ -26,13 +24,8 @@ export default class MMediaAPI {
         return {death: this.#historyDeathData, confirmed: this.#historyConfirmedData};
     }
 
-    // getVaccinesData(){
-    //     return this.#vaccinesData;
-    // }
-
-    async getVaccinesData(country){
-        const vac = await this.#vaccinesData;
-        return country!=undefined ? _.get( vac, country) : vac;
+    getVaccinesData(){
+        return this.getData(requestVaccines);
     }
 
     getCasesData(){

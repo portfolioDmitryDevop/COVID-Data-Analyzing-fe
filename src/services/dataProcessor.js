@@ -93,38 +93,32 @@ export default class DataProcessor {
 
         const fromDate = convertDate(from);
         const toDate = convertDate(to);
-        // const toDate = convertDate(getPreviousDay(from)); // From is excluded parameter
         const data = await this.#dataProvider.getHistoryData();
         const confirmed = data.confirmed;
         const death = data.death;
+        const objVaccines = await this.#dataProvider.getVaccinesData();
         const arrCases = [];
 
         for (const key in confirmed) {
             if (confirmed.hasOwnProperty(key)) {
-                const statCase = await this.#createStatCase(confirmed[key], death[key], fromDate, toDate);
+                const statCase = await this.#createStatCase(confirmed[key], death[key],objVaccines[key], fromDate, toDate);
                 if (statCase != null) arrCases.push(statCase);
             }
         }
         return arrCases;
     }
 
-    async #createStatCase(confirmedData, deathData, from, to) {
+    async #createStatCase(confirmedData, deathData,objVaccines, from, to) {
         const country = confirmedData.All.country;
         if (country != undefined) {
             const population = confirmedData.All.population;
             const iso = confirmedData.All.abbreviation;
             const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
             const death = this.#parseDatesData(deathData.All.dates, population, from, to);
-            const vaccinatedCount = await this.#getVaccinatedCount(country);
-
-            const statCaseDataObject = createStatDataObject(iso, country, confirmed.percent, death.percent, vaccinatedCount / population, confirmed.amount, death.amount, vaccinatedCount);
+            const vaccinated = objVaccines != undefined ? objVaccines.All.people_vaccinated : 0;
+            const statCaseDataObject = createStatDataObject(iso, country, confirmed.percent, death.percent, vaccinated / population, confirmed.amount, death.amount, vaccinated);
             return statCaseDataObject
         }
-    }
-
-    async #getVaccinatedCount(country) {
-        const vaccinatedData =await this.#dataProvider.getVaccinesData(country);
-        return vaccinatedData != undefined ? vaccinatedData.All.people_vaccinated : 0;
     }
 
     #parseDatesData(data, population, from, to) {
