@@ -132,5 +132,12 @@ export default class DataProcessor {
         if (from < new Date('2020-01-22T00:00:00')) { throw new Error("There is no data on the epidemic earlier than 01/22/2020.") };
     }
 
+    /* HISTORICAL REQUEST BY COUNTRIES */
+
+    async getHistoryStatisticsByCountries(countries, from, to) {
+        const allData = await this.getHistoryStatistics(from, to)
+        return _.filter(allData, function(o) { return countries.includes(o.country); });
+    }
+
 
 }

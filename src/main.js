@@ -33,4 +33,11 @@ async function getHistoryStatistics() {
     });
 }
 
-getHistoryStatistics();
+// getHistoryStatistics();
+
+async function getHistoryStatisticsByCountry() {
+    const test = await dataProcessor.getHistoryStatisticsByCountries(["Israel", "Russia", "US"], new Date('2021-10-17T13:24:00'), new Date('2021-12-26T13:24:00'));
+    console.log(test);
+}
+
+getHistoryStatisticsByCountry()
