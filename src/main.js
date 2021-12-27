@@ -9,6 +9,7 @@ import config from "./config/config.json";
 import FormHandler from "./ui-ux/form-handler";
 import { objToExponential, convertDate } from "./utilities/extensions";
 import DashboardHandler from "./ui-ux/dashboard-handler";
+import _ from "lodash";
 
 /***** OBJECTS *****/
 const firstObservationDay = '2020-01-22';
@@ -23,6 +24,9 @@ const historyFormHandler = new FormHandler('history-form', 'alert');
 const statFormHandler = new FormHandler('stat-form', 'alert');
 
 /***** FUNCTIONS *****/
+
+
+
 async function poller() {
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillDashboard(continentsData);
