@@ -43,14 +43,16 @@ function fillHistTable(from, to, num) {
     historyTableHandler.clear();
     spinner.wait(async () => {
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
-        if (typeof num == 'number') {
-            for (let i = 0; i < num; i++) {
-                historyTableHandler.addRow(objToExponential(histArr[i]));
-            }
-        } else {
+        console.log(num);
+        console.log(typeof num);
+        if (num == '' || num == undefined) {
             histArr.forEach(obj => {
                 historyTableHandler.addRow(objToExponential(obj));
             });
+        } else {
+            for (let i = 0; i < num; i++) {
+                historyTableHandler.addRow(objToExponential(histArr[i]));
+            }
         }
     });
 }
