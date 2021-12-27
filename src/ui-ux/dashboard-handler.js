@@ -70,14 +70,15 @@ export default class DashboardHandler {
     }
 
     addConventions() {
-        this.#conventions.innerHTML = `
-        <ul class="list-unstyled list-inline small text-center pt-2">
-              <li class="list-inline-item"><i class="bi bi-check-circle"></i> Confirmed cases rate.</li>
-              <li class="list-inline-item"><i class="bi bi-emoji-dizzy"></i> Death rate.</li>
-              <li class="list-inline-item"><i class="bi bi-shield-shaded"></i></i> Rate of people vaccinated.</li>
-            </ul>
-        `
+        this.#conventions.innerHTML = conventionsHTML;
+        this.#map.innerHTML += `<div class="conventionsMap">${conventionsHTML}</div>`
     }
 
     
 }
+
+const conventionsHTML = `<ul class="list-unstyled list-inline small text-center pt-2">
+<li class="list-inline-item"><i class="bi bi-check-circle"></i> Confirmed cases rate.</li>
+<li class="list-inline-item"><i class="bi bi-emoji-dizzy"></i> Death rate.</li>
+<li class="list-inline-item"><i class="bi bi-shield-shaded"></i></i> Rate of people vaccinated.</li>
+</ul>`;

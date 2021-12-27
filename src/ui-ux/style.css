@@ -26,37 +26,57 @@
 }
 
 .northamerica {
+    min-width: 250px;
+    opacity: 90%;
     position: absolute;
     top: 10em;
     left: 10em;
 }
 
 .southamerica {
+    min-width: 250px;
+    opacity: 90%;
     position: absolute;
     bottom: 10em;
     left: 15em;
 }
 
 .asia {
+    min-width: 250px;
+    opacity: 90%;
     position: absolute;
     top: 10em;
     right: 15em;
 }
 
 .europe {
+    min-width: 250px;
+    opacity: 90%;
     position: absolute;
     top: 7em;
     right: 43em;
 }
 
 .africa {
+    min-width: 250px;
+    opacity: 90%;
     position: absolute;
     bottom: 16em;
     right: 40em;
 }
 
 .oceania {
+    min-width: 250px;
+    opacity: 90%;
     position: absolute;
     bottom: 10em;
-    right: 10em;
+    right: 12em;
+}
+
+.conventionsMap {
+    min-width: 250px;
+    position: absolute;
+    bottom: 3em;
+    left: 35%;
+    color: #8d8b8b;
 }
