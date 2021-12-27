@@ -38,13 +38,10 @@ function fillMainTable(continentsArr) {
 function fillMapData(continentsArr) {
 
 }
-
 function fillHistTable(from, to, num) {
     historyTableHandler.clear();
     spinner.wait(async () => {
-        let histArr = await dataProcessor.getHistoryStatistics(from, to);
-        console.log(num);
-        console.log(typeof num);
+        let histArr = await dataProcessor.getHistoryStatistics(from, to);        
         if (num == '' || num == undefined) {
             histArr.forEach(obj => {
                 historyTableHandler.addRow(objToExponential(obj));
@@ -56,7 +53,19 @@ function fillHistTable(from, to, num) {
         }
     });
 }
-
+function fillStatTable(from, to, countries) {
+    statTableHandler.clear();
+    spinner.wait(async () => {
+        if (countries == undefined || countries == []) {
+            countries = config.countriesList;
+        }
+        let statArr = 
+            await dataProcessor.getHistoryStatisticsByCountries(countries, from, to);
+        statArr.forEach(obj => {
+            statTableHandler.addRow(objToExponential(obj));
+        })
+    });
+}
 function historySort(key){
     historyTableHandler.clear();
     const sorted = dataProcessor.sort(key);
@@ -73,7 +82,15 @@ setInterval(poller, config.pollingIntervalInSeconds * 1000);
 
 FormHandler.fillCalendarValues('dateFromHist', undefined, convertDate(new Date()));
 FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDate(new Date()));
+FormHandler.fillCalendarValues('dateFromStat', undefined, convertDate(new Date()));
+FormHandler.fillCalendarValues('dateToStat', convertDate(new Date()), convertDate(new Date()));
 
 fillHistTable(new Date(firstObservationDay), new Date());
 historyFormHandler.addHandler(async data => 
     fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
+
+FormHandler.fillOptions('countriesList', config.countriesList);
+
+fillStatTable(new Date(firstObservationDay), new Date());
+statFormHandler.addHandler(async data => 
+    fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries));
