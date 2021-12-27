@@ -66,8 +66,8 @@ export default class FormHandler {
         }
         values.forEach(value => {
             parentElement.innerHTML += `<div class="col-4 form-check ms-2">
-            <input type="checkbox" class="form-check-input" id="${value}" 
-                value="${value}" name="${name}">
+            <input type="checkbox" class="form-check-input" id="${value}" name="${name}"
+             value="${value}">
             <label for="${value}" class="form-check-label">${value}</label>
           </div>`
         });

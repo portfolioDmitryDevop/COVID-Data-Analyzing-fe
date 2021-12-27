@@ -9,6 +9,9 @@ import config from "./config/config.json";
 import FormHandler from "./ui-ux/form-handler";
 import { objToExponential, convertDate } from "./utilities/extensions";
 
+/***** !!! DO NOT TOUCH !!! *****/
+FormHandler.fillCheckBoxes('countries-list', config.countriesList, 'countries');
+
 /***** OBJECTS *****/
 const firstObservationDay = '2020-01-22';
 const dataProcessor = new DataProcessor(dataProvider, config);
@@ -56,7 +59,7 @@ function fillHistTable(from, to, num) {
 function fillStatTable(from, to, countries) {
     statTableHandler.clear();
     spinner.wait(async () => {
-        if (countries == undefined || countries == []) {
+        if (countries == undefined || countries.length == 0) {
             countries = config.countriesList;
         }
         let statArr = 
@@ -86,12 +89,10 @@ FormHandler.fillCalendarValues('dateFromStat', undefined, convertDate(new Date()
 FormHandler.fillCalendarValues('dateToStat', convertDate(new Date()), convertDate(new Date()));
 
 fillHistTable(new Date(firstObservationDay), new Date());
-historyFormHandler.addHandler(async data => 
+historyFormHandler.addHandler(data => 
     fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
 
-FormHandler.fillCheckBoxes('countries-list', config.countriesList, 'countries');
-
 fillStatTable(new Date(firstObservationDay), new Date());
-statFormHandler.addHandler(async data => {
+statFormHandler.addHandler(data => {
     fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries);
-});    
+});
