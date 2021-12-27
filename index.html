@@ -11,6 +11,9 @@
 </head>
 
 <body>
+  <div class="row justify-content-sm-center mb-3">
+    <div id="alert"></div>
+  </div>
   <nav class="navbar bg-light p-0">
     <div class="container">
       <div class="logo" style="cursor: pointer;" onclick="window.location.reload()">
@@ -91,11 +94,11 @@
               <label class="form-label fw-bold" for="dateToHist">Date To: </label>
               <input type="date" class="form-control" id="dateToHist" name="toDate">
             </div>
-            <div class="col-sm mb-2">
+
+            <div class="col-sm">
               <label class="form-label fw-bold" for="countriesNumHist">Countries Number: </label>
-              <select id="countriesNumHist" class="form-select">
-                <option value hidden disabled selected>--All countries--</option>
-              </select>
+              <input id="countriesNumHist" type="number" class="form-control" 
+              placeholder="All countries" name="countriesNum">
             </div>
           </div>
           <div class="row mt-3">
