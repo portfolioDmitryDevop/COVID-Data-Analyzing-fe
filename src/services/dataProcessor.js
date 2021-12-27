@@ -83,7 +83,10 @@ export default class DataProcessor {
                         "continent": e[0],
                         "confirmed": acc.confirmed / acc.population,
                         "deaths": acc.deaths / acc.population,
-                        "vaccinated": acc.vaccinated / acc.population
+                        "vaccinated": acc.vaccinated / acc.population,
+                        "confirmedAmount": acc.confirmed,
+                        "deathsAmount": acc.deaths,
+                        "vaccinatedAmount": acc.vaccinated
                     });
                 }
             });

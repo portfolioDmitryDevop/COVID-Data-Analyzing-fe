@@ -8,13 +8,13 @@ import TableHandler from "./ui-ux/table-handler";
 import config from "./config/config.json";
 import FormHandler from "./ui-ux/form-handler";
 import { objToExponential, convertDate } from "./utilities/extensions";
+import DashboardHandler from "./ui-ux/dashboard-handler";
 
 /***** OBJECTS *****/
 const firstObservationDay = '2020-01-22';
 const dataProcessor = new DataProcessor(dataProvider, config);
 const spinner = new Spinner("spinner");
-const mainTableHandler = new TableHandler(undefined, 'main-body',
-    ['continent', 'confirmed', 'deaths', 'vaccinated']);
+const dashboard = new DashboardHandler('dashboard', 'conventions');
 const historyTableHandler = new TableHandler('history-header', 'history-body',
     ['country', 'confirmed', 'deaths', 'vaccinated'], historySort);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
@@ -25,16 +25,19 @@ const statFormHandler = new FormHandler('stat-form', 'alert');
 /***** FUNCTIONS *****/
 async function poller() {
     const continentsData = await dataProcessor.getStatisticsContinents();
-    fillMainTable(continentsData);
+    fillDashboard(continentsData);
     fillMapData(continentsData);
 }
-function fillMainTable(continentsArr) {
-    mainTableHandler.clear();
-    continentsArr.forEach(c => {
-        const color = config.continentColors[c.continent.toLowerCase()];
-        mainTableHandler.addRowColored(objToExponential(c), color);
+
+function fillDashboard(continentsArr) {
+    dashboard.clear();
+    continentsArr.forEach(data => {
+        const color = config.continentColors[data.continent.toLowerCase()];
+        dashboard.addEntry(data, color)
     });
+    dashboard.addConventions();
 }
+
 function fillMapData(continentsArr) {
 
 }
@@ -43,8 +46,6 @@ function fillHistTable(from, to, num) {
     historyTableHandler.clear();
     spinner.wait(async () => {
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
-        console.log(num);
-        console.log(typeof num);
         if (num == '' || num == undefined) {
             histArr.forEach(obj => {
                 historyTableHandler.addRow(objToExponential(obj));
@@ -72,7 +73,7 @@ function statSort(key, headerId){
 /***** ACTIONS *****/
 spinner.wait(async () => {
     const continentsData = await dataProcessor.getStatisticsContinents();
-    fillMainTable(continentsData);
+    fillDashboard(continentsData);
     fillMapData(continentsData);
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);

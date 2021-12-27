@@ -1,13 +1,5 @@
-.logo span {
-    color: #fd5786;
-    font-weight: bolder;
-    font-size: 1.55em;
-    margin: 20  20  20  0;
-    display: inline;
-}
-
 .logo img {
-    width: 48px;
+    height: 48px;
     margin: 10 10 10 50;
     display: inline;
 }
@@ -18,3 +10,11 @@
     color: #fd5786;
 }
 
+.nav-link {
+    color: #fd5786 !important;
+}
+
+.pink {
+    background-color: #fd5786 !important;
+    color: white !important;
+}
