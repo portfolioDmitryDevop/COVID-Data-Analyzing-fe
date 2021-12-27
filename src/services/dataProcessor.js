@@ -7,6 +7,9 @@ export default class DataProcessor {
     #dataProvider;
     #config;
     #dataHistoryAll;
+    #tableSort = [];
+    
+
 
     constructor(dataProvider, config) {
         this.#dataProvider = dataProvider;
@@ -154,8 +157,25 @@ export default class DataProcessor {
         return _.filter(allData, function (o) { return countries.includes(o.country); });
     }
 
-    sort(key) {
-        return _.sortBy(this.#dataHistoryAll, key);
+    sort(key, headerId) {
+
+        // console.log(headerId);
+
+        if(this.#tableSort[headerId] == undefined){
+            this.#tableSort[headerId] = {country : true, confirmed: true, deaths: true, vaccinated: true};
+        }
+
+        if(this.#isReverseSort(key, this.#tableSort[headerId])){
+            return _.sortBy(this.#dataHistoryAll, key);
+        } else {
+            return _.sortBy(this.#dataHistoryAll, key).reverse();
+        }
+    }
+    // #sortFlag = {country : true, confirmed: true, deaths: true, vaccinated: true};
+    #isReverseSort(key, sortFlag){
+        const res = sortFlag[key];
+        sortFlag[key] = !sortFlag[key];
+        return res;
     }
 
 

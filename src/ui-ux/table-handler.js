@@ -20,7 +20,7 @@ export default class TableHandler {
         if (sortFun){
             const columnsEl = document.querySelectorAll(`#${headerId} th`);
             columnsEl.forEach(c => c.addEventListener('click', 
-                sortFun.bind(this, c.textContent)));
+                sortFun.bind(this, c.textContent, headerId)));
         }
     }
     clear() {
