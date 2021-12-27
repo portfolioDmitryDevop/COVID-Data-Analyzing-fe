@@ -17,11 +17,12 @@ const dataProcessor = new DataProcessor(dataProvider, config);
 const spinner = new Spinner("spinner");
 const dashboard = new DashboardHandler('map','dashboard', 'conventions');
 const historyTableHandler = new TableHandler('history-header', 'history-body',
-    ['country', 'confirmed', 'deaths', 'vaccinated'], historySort);
+    ['', 'country', 'confirmed', 'deaths', 'vaccinated'], historySort);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
     ['country', 'confirmed', 'deaths', 'vaccinated'], statSort);
 const historyFormHandler = new FormHandler('history-form', 'alert');
 const statFormHandler = new FormHandler('stat-form', 'alert');
+let countCountry;
 
 /***** FUNCTIONS *****/
 
@@ -57,15 +58,17 @@ function fillMapData(continentsArr) {
 
 function fillHistTable(from, to, num) {
     historyTableHandler.clear();
+    countCountry = num;
+    let counter = 1;
     spinner.wait(async () => {
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
         if (num == '' || num == undefined) {
             histArr.forEach(obj => {
-                historyTableHandler.addRow(objToExponential(obj));
+                historyTableHandler.addRowImPosition(objToExponential(obj), counter++);
             });
         } else {
             for (let i = 0; i < num; i++) {
-                historyTableHandler.addRow(objToExponential(histArr[i]));
+                historyTableHandler.addRowImPosition(objToExponential(histArr[i]), counter++);
             }
         }
     });
@@ -73,14 +76,16 @@ function fillHistTable(from, to, num) {
 
 function historySort(key, headerId){
     historyTableHandler.clear();
+    let counter = 1;
     const sorted = dataProcessor.sort(key, headerId);
-    sorted.forEach(c => historyTableHandler.addRow(c));
+    sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));
 }
 
 function statSort(key, headerId){
     statTableHandler.clear();
+    let counter = 1;
     const sorted = dataProcessor.sort(key, headerId);
-    sorted.forEach(c => statTableHandler.addRow(c));
+    sorted.forEach(c => statTableHandler.addRowImPosition(c, counter++));
 }
 
 /***** ACTIONS *****/

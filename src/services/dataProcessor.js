@@ -163,9 +163,6 @@ export default class DataProcessor {
     }
 
     sort(key, headerId) {
-
-        // console.log(headerId);
-
         if(this.#tableSort[headerId] == undefined){
             this.#tableSort[headerId] = {country : true, confirmed: true, deaths: true, vaccinated: true};
         }
@@ -176,7 +173,6 @@ export default class DataProcessor {
             return _.sortBy(this.#dataHistoryAll, key).reverse();
         }
     }
-    // #sortFlag = {country : true, confirmed: true, deaths: true, vaccinated: true};
     #isReverseSort(key, sortFlag){
         const res = sortFlag[key];
         sortFlag[key] = !sortFlag[key];

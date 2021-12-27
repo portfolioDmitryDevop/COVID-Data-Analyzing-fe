@@ -26,6 +26,9 @@ export default class TableHandler {
     clear() {
         this.#bodyElement.innerHTML = ' ';
     }
+    addRowImPosition(obj, position) {
+        this.#bodyElement.innerHTML += `<tr><td>${position}</td>${this.#getRecordData(obj,position)}</tr>`;
+        }
     addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
     }
@@ -36,6 +39,9 @@ export default class TableHandler {
         return this.#keys.map(key => this.#getColumnData(obj, key)).join('');
     }
     #getColumnData(obj, key) {
+        if(obj[key] == undefined){
+            return ``;
+        }
         return `<td>${obj[key].constructor.name === "Date" 
             ? obj[key].toISOString().substr(0,10) 
             : obj[key]}</td>`
