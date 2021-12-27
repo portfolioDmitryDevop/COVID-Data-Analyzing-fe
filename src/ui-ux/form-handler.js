@@ -30,7 +30,7 @@ export default class FormHandler {
             hideAlert(this.#alertElement);
             await handlerFun(obj);
         }
-        catch(validationErrors) {    
+        catch(validationErrors) {   
             if (validationErrors == 'Server is unavailable') {
                 throw validationErrors;
             }
