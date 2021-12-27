@@ -16,7 +16,7 @@ const spinner = new Spinner("spinner");
 const mainTableHandler = new TableHandler(undefined, 'main-body',
     ['continent', 'confirmed', 'deaths', 'vaccinated']);
 const historyTableHandler = new TableHandler('history-header', 'history-body',
-    ['country', 'confirmed', 'deaths', 'vaccinated']);
+    ['country', 'confirmed', 'deaths', 'vaccinated'], historySort);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
     ['country', 'confirmed', 'deaths', 'vaccinated']);
 const historyFormHandler = new FormHandler('history-form', 'alert');
@@ -53,6 +53,12 @@ function fillHistTable(from, to, num) {
             });
         }
     });
+}
+
+function historySort(key){
+    historyTableHandler.clear();
+    const sorted = dataProcessor.sort(key);
+    sorted.forEach(c => historyTableHandler.addRow(c));
 }
 
 /***** ACTIONS *****/
