@@ -89,8 +89,9 @@ fillHistTable(new Date(firstObservationDay), new Date());
 historyFormHandler.addHandler(async data => 
     fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
 
-FormHandler.fillOptions('countriesList', config.countriesList);
+FormHandler.fillCheckBoxes('countries-list', config.countriesList, 'countries');
 
 fillStatTable(new Date(firstObservationDay), new Date());
-statFormHandler.addHandler(async data => 
-    fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries));
+statFormHandler.addHandler(async data => {
+    fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries);
+});    
