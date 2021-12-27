@@ -11,6 +11,9 @@ import { objToExponential, convertDate } from "./utilities/extensions";
 import DashboardHandler from "./ui-ux/dashboard-handler";
 import _ from "lodash";
 
+/***** !!! DO NOT TOUCH !!! *****/
+FormHandler.fillCheckBoxes('countries-list', config.countriesList, 'countries');
+
 /***** OBJECTS *****/
 const firstObservationDay = '2020-01-22';
 const dataProcessor = new DataProcessor(dataProvider, config);
@@ -24,15 +27,11 @@ const historyFormHandler = new FormHandler('history-form', 'alert');
 const statFormHandler = new FormHandler('stat-form', 'alert');
 
 /***** FUNCTIONS *****/
-
-
-
 async function poller() {
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillDashboard(continentsData);
     fillMapData(continentsData);
 }
-
 function fillDashboard(continentsArr) {
     const worldStat = {confirmedAmount: 0, deathsAmount: 0, vaccinatedAmount: 0, population: 0};
     dashboard.clear();
@@ -50,11 +49,9 @@ function fillDashboard(continentsArr) {
     dashboard.addGlobalEntry(worldStat);
     dashboard.addConventions();
 }
-
 function fillMapData(continentsArr) {
 
 }
-
 function fillHistTable(from, to, num) {
     historyTableHandler.clear();
     spinner.wait(async () => {
@@ -70,13 +67,24 @@ function fillHistTable(from, to, num) {
         }
     });
 }
-
-function historySort(key, headerId){
+function fillStatTable(from, to, countries) {
+    statTableHandler.clear();
+    spinner.wait(async () => {
+        if (countries == undefined || countries.length == 0) {
+            countries = config.countriesList;
+        }
+        let statArr = 
+            await dataProcessor.getHistoryStatisticsByCountries(countries, from, to);
+        statArr.forEach(obj => {
+            statTableHandler.addRow(objToExponential(obj));
+        })
+    });
+}
+function historySort(key){
     historyTableHandler.clear();
     const sorted = dataProcessor.sort(key, headerId);
     sorted.forEach(c => historyTableHandler.addRow(c));
 }
-
 function statSort(key, headerId){
     statTableHandler.clear();
     const sorted = dataProcessor.sort(key, headerId);
@@ -93,7 +101,14 @@ setInterval(poller, config.pollingIntervalInSeconds * 1000);
 
 FormHandler.fillCalendarValues('dateFromHist', undefined, convertDate(new Date()));
 FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDate(new Date()));
+FormHandler.fillCalendarValues('dateFromStat', undefined, convertDate(new Date()));
+FormHandler.fillCalendarValues('dateToStat', convertDate(new Date()), convertDate(new Date()));
 
 fillHistTable(new Date(firstObservationDay), new Date());
-historyFormHandler.addHandler(async data => 
+historyFormHandler.addHandler(data => 
     fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
+
+fillStatTable(new Date(firstObservationDay), new Date());
+statFormHandler.addHandler(data => {
+    fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries);
+});
