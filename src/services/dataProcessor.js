@@ -24,8 +24,8 @@ export default class DataProcessor {
         const arrCases = this.#parseObjCases(objCases);
         const objVaccines = await this.#dataProvider.getVaccinesData();
         const arrVaccines = this.#parseObjVaccines(objVaccines);
-        const arrMerge = _.merge(arrCases, arrVaccines);
-
+        let arrMerge = _.merge(_.keyBy(arrCases, 'country'), _.keyBy(arrVaccines, 'country'));
+        arrMerge = _.values(arrMerge);
         const objContinent = _.groupBy(arrMerge, (e) => {
             return e.continent;
         });
@@ -54,7 +54,8 @@ export default class DataProcessor {
         for (const key in objVaccines) {
             arrVaccines.push({
                 "country": key,
-                "vaccinated": objVaccines[key].All.people_vaccinated
+                "vaccinated": objVaccines[key].All.people_vaccinated,
+                "population": objVaccines[key].All.population
             });
         }
         return arrVaccines;
@@ -81,9 +82,9 @@ export default class DataProcessor {
                 if (e[0] != 'undefined') {
                     arrRate.push({
                         "continent": e[0],
-                        "confirmed": acc.confirmed / acc.population,
-                        "deaths": acc.deaths / acc.population,
-                        "vaccinated": acc.vaccinated / acc.population,
+                        "confirmed": acc.confirmed / acc.population * 100,
+                        "deaths": acc.deaths / acc.population * 100,
+                        "vaccinated": acc.vaccinated / acc.population * 100,
                         "confirmedAmount": acc.confirmed,
                         "deathsAmount": acc.deaths,
                         "vaccinatedAmount": acc.vaccinated
