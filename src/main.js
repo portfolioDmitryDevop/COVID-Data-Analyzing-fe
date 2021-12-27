@@ -36,7 +36,11 @@ function fillMapData(continentsArr) {
 
 async function fillHistroryTableAll(){
     const res = await dataProcessor.getHistoryStatistics(new Date("2021-12-24"),new Date("2021-12-25"));
+    const resCountry = await dataProcessor.getHistoryStatisticsByCountries(
+        ['Israel', 'US', 'Russia'], new Date("2021-12-24"),new Date("2021-12-25")
+    )
     console.log(res);
+    console.log(resCountry);
 }
 /***** ACTIONS *****/
 
