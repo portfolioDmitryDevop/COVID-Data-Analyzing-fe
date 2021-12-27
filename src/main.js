@@ -37,6 +37,7 @@ function fillMainTable(continentsArr) {
 function fillMapData(continentsArr) {
 
 }
+
 function fillHistTable(from, to, num) {
     spinner.wait(async () => {
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
