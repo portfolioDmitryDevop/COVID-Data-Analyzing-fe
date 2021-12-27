@@ -87,7 +87,8 @@ export default class DataProcessor {
                         "vaccinated": acc.vaccinated / acc.population * 100,
                         "confirmedAmount": acc.confirmed,
                         "deathsAmount": acc.deaths,
-                        "vaccinatedAmount": acc.vaccinated
+                        "vaccinatedAmount": acc.vaccinated,
+                        "population": acc.population
                     });
                 }
             });
