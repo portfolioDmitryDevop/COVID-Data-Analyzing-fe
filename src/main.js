@@ -57,4 +57,4 @@ spinner.wait(async () => {
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
 
 historyFormHandler.addHandler(async data => 
-    fillHistTable(data.fromDate, data.toDate, data.countriesNum));
+    fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
