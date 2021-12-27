@@ -18,7 +18,7 @@ const mainTableHandler = new TableHandler(undefined, 'main-body',
 const historyTableHandler = new TableHandler('history-header', 'history-body',
     ['country', 'confirmed', 'deaths', 'vaccinated'], historySort);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
-    ['country', 'confirmed', 'deaths', 'vaccinated']);
+    ['country', 'confirmed', 'deaths', 'vaccinated'], statSort);
 const historyFormHandler = new FormHandler('history-form', 'alert');
 const statFormHandler = new FormHandler('stat-form', 'alert');
 
@@ -55,10 +55,16 @@ function fillHistTable(from, to, num) {
     });
 }
 
-function historySort(key){
+function historySort(key, headerId){
     historyTableHandler.clear();
-    const sorted = dataProcessor.sort(key);
+    const sorted = dataProcessor.sort(key, headerId);
     sorted.forEach(c => historyTableHandler.addRow(c));
+}
+
+function statSort(key, headerId){
+    statTableHandler.clear();
+    const sorted = dataProcessor.sort(key, headerId);
+    sorted.forEach(c => statTableHandler.addRow(c));
 }
 
 /***** ACTIONS *****/
