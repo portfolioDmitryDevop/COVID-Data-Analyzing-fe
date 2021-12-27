@@ -91,7 +91,7 @@ export default class DataProcessor {
     async getHistoryStatistics(from, to) {
         this.#validateInputDates(from, to);
 
-        const fromDate = convertDate(from);
+        const fromDate = this.#setFromDate(from, to)
         const toDate = convertDate(getPreviousDay(to)); // To is excluded parameter
         const data = await this.#dataProvider.getHistoryData();
         const confirmed = data.confirmed;
@@ -128,10 +128,23 @@ export default class DataProcessor {
 
     #validateInputDates(from, to) {
         if (from == undefined || to == undefined) throw new Error("Both dates must be specified for a historical request.");
-        if (removeTime(from).getTime() > removeTime(new Date()).getTime()) throw new Error("Historical requests for the future are not available.");
         if (from >= to) throw new Error("From date can't be equal or higher than To date.");
         if (from < new Date('2020-01-22T00:00:00')) { throw new Error("There is no data on the epidemic earlier than 01/22/2020.") };
+        const currentDay = removeTime(new Date()).getTime();
+        if (removeTime(from).getTime() > currentDay || removeTime(to).getTime() > currentDay) throw new Error("Historical requests for the future are not available.");
     }
+
+    // Correct the interval if the period is set to one day
+    #setFromDate(from, to) {
+        const checkTo = getPreviousDay(to);
+        const checkFrom = removeTime(from);
+        if (checkTo.getTime() === checkFrom.getTime()) {
+            console.log("FIXED FROM DATE: " + convertDate(getPreviousDay(from)));
+            return convertDate(getPreviousDay(from));
+        } else {
+            return convertDate(from);
+        }
+    }    
 
     /* HISTORICAL REQUEST BY COUNTRIES */
 

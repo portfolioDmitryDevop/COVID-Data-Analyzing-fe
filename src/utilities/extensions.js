@@ -7,7 +7,8 @@ export function removeTime(date) {
 
 // Convert Date to String with format YYYY-MM-DD
 export function convertDate(date) {
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${day}`;
 } 
 
 // Getting the previous day from specified Date
@@ -23,7 +24,7 @@ export function getPreviousDay(selectedDay) {
 function dateMinusOne(date) {
     var previous = new Date();
     previous.setDate(date.getDate() - 1);
-    return previous;
+    return removeTime(previous);
 }
 
 export function objToExponential(obj) {
