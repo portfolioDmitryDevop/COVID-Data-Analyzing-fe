@@ -139,7 +139,6 @@ export default class DataProcessor {
         const checkTo = getPreviousDay(to);
         const checkFrom = removeTime(from);
         if (checkTo.getTime() === checkFrom.getTime()) {
-            console.log("FIXED FROM DATE: " + convertDate(getPreviousDay(from)));
             return convertDate(getPreviousDay(from));
         } else {
             return convertDate(from);

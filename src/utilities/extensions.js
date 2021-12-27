@@ -7,8 +7,10 @@ export function removeTime(date) {
 
 // Convert Date to String with format YYYY-MM-DD
 export function convertDate(date) {
+    const fixedMonth = date.getMonth() + 1;
+    const month = fixedMonth < 10 ? `0${fixedMonth}` : fixedMonth; 
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${day}`;
+    return `${date.getFullYear()}-${month}-${day}`;
 } 
 
 // Getting the previous day from specified Date

@@ -40,10 +40,10 @@ function fillMapData(continentsArr) {
 }
 
 function fillHistTable(from, to, num) {
+    historyTableHandler.clear();
     spinner.wait(async () => {
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
-        historyTableHandler.clear();
-        if (num != undefined) {
+        if (typeof num == 'number') {
             for (let i = 0; i < num; i++) {
                 historyTableHandler.addRow(objToExponential(histArr[i]));
             }
