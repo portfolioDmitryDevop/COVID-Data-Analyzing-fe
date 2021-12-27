@@ -6,6 +6,7 @@ export default class DataProcessor {
 
     #dataProvider;
     #config;
+    #dataHistoryAll;
 
     constructor(dataProvider, config) {
         this.#dataProvider = dataProvider;
@@ -105,6 +106,7 @@ export default class DataProcessor {
                 if (statCase != null) arrCases.push(statCase);
             }
         }
+        this.#dataHistoryAll = arrCases;
         return arrCases;
     }
 
@@ -150,6 +152,10 @@ export default class DataProcessor {
     async getHistoryStatisticsByCountries(countries, from, to) {
         const allData = await this.getHistoryStatistics(from, to)
         return _.filter(allData, function (o) { return countries.includes(o.country); });
+    }
+
+    sort(key) {
+        return _.sortBy(this.#dataHistoryAll, key);
     }
 
 
