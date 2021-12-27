@@ -14,7 +14,7 @@ import DashboardHandler from "./ui-ux/dashboard-handler";
 const firstObservationDay = '2020-01-22';
 const dataProcessor = new DataProcessor(dataProvider, config);
 const spinner = new Spinner("spinner");
-const dashboard = new DashboardHandler('dashboard', 'conventions');
+const dashboard = new DashboardHandler('map','dashboard', 'conventions');
 const historyTableHandler = new TableHandler('history-header', 'history-body',
     ['country', 'confirmed', 'deaths', 'vaccinated'], historySort);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
