@@ -10,7 +10,7 @@ export default class Spinner {
     }
 
     #start() {
-        this.#spinnerElement.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+        this.#spinnerElement.innerHTML = '<div class="spinner-border" style="color: #fd5786;" role="status"><span class="visually-hidden">Loading...</span></div>';
     }
 
     #stop() {
