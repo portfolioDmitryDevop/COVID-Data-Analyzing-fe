@@ -7,7 +7,8 @@
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
   <link rel="shortcut icon" href="src/ui-ux/images/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="src/ui-ux/style.css">
-  <title>COVID Data Analyzing</title>
+  <link rel="icon" href="src/ui-ux/images/favicon.png" type="image/x-icon">
+  <title>COVID Monitor</title>
 </head>
 
 <body>
@@ -40,10 +41,12 @@
 
   <div class="tab-content mt-3" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel" aria-labelledby="nav-dashboard-tab">
-      <div class="text-center d-none d-lg-flex">
-        <img src="src/ui-ux/images/continents.png" class="rounded img-fluid" alt="Real-Time Dashboard">
+      <div class="text-center d-none d-xl-flex">
+        <div id="map" class="map small">
+          
+        </div>
       </div>
-      <div id="main-table" class="container table-responsive d-lg-none">
+      <div id="main-table" class="container table-responsive d-xl-none">
         <div class="container">
           <div class="row justify-content-center" id="dashboard">
 

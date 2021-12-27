@@ -18,3 +18,45 @@
     background-color: #fd5786 !important;
     color: white !important;
 }
+
+.map {
+    background-image: url("images/continents.png");
+    width: 100vw;
+    height: 80vh;
+}
+
+.northamerica {
+    position: absolute;
+    top: 10em;
+    left: 10em;
+}
+
+.southamerica {
+    position: absolute;
+    bottom: 10em;
+    left: 15em;
+}
+
+.asia {
+    position: absolute;
+    top: 10em;
+    right: 15em;
+}
+
+.europe {
+    position: absolute;
+    top: 7em;
+    right: 43em;
+}
+
+.africa {
+    position: absolute;
+    bottom: 16em;
+    right: 40em;
+}
+
+.oceania {
+    position: absolute;
+    bottom: 10em;
+    right: 10em;
+}
