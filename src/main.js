@@ -30,11 +30,22 @@ async function poller() {
 }
 
 function fillDashboard(continentsArr) {
+    const worldStat = {confirmed: 0, confirmedAmount: 0, deaths: 0, deathsAmount: 0, vaccinated: 0, vaccinatedAmount: 0};
     dashboard.clear();
     continentsArr.forEach(data => {
+        // Update Global World Stat Object
+        worldStat.confirmed += data.confirmed;
+        worldStat.confirmedAmount += data.confirmedAmount;
+        worldStat.deaths += data.deaths;
+        worldStat.deathsAmount += data.deathsAmount;
+        worldStat.vaccinated += data.vaccinated;
+        worldStat.vaccinatedAmount += data.vaccinatedAmount;
+
+        // Add Continent Entry
         const color = config.continentColors[data.continent.toLowerCase()];
         dashboard.addEntry(data, color)
     });
+    dashboard.addGlobalEntry(worldStat);
     dashboard.addConventions();
 }
 
