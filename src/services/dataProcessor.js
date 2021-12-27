@@ -117,7 +117,7 @@ export default class DataProcessor {
             const death = this.#parseDatesData(deathData.All.dates, population, from, to);
             const vaccinated = objVaccines != undefined ? objVaccines.All.people_vaccinated : 0;
             const statCaseDataObject = createStatDataObject(iso, country, confirmed.percent, death.percent, vaccinated / population, confirmed.amount, death.amount, vaccinated);
-            return statCaseDataObject
+            return statCaseDataObject;
         }
     }
 

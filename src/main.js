@@ -10,6 +10,7 @@ import FormHandler from "./ui-ux/form-handler";
 import { objToExponential } from "./utilities/extensions";
 
 /***** OBJECTS *****/
+const firstObservationDay = '2020-01-22';
 const dataProcessor = new DataProcessor(dataProvider, config);
 const spinner = new Spinner("spinner");
 const mainTableHandler = new TableHandler(undefined, 'main-body',
@@ -42,9 +43,15 @@ function fillHistTable(from, to, num) {
     spinner.wait(async () => {
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
         historyTableHandler.clear();
-        histArr.forEach(obj => {
-            historyTableHandler.addRow(objToExponential(obj));
-        });
+        if (num != undefined) {
+            for (let i = 0; i < num; i++) {
+                historyTableHandler.addRow(objToExponential(histArr[i]));
+            }
+        } else {
+            histArr.forEach(obj => {
+                historyTableHandler.addRow(objToExponential(obj));
+            });
+        }
     });
 }
 
@@ -56,5 +63,6 @@ spinner.wait(async () => {
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
 
+fillHistTable(new Date(firstObservationDay), new Date());
 historyFormHandler.addHandler(async data => 
     fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
