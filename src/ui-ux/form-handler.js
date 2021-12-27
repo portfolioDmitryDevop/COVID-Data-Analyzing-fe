@@ -45,6 +45,19 @@ export default class FormHandler {
         }
         selectElement.innerHTML += getOptions(options);
     }
+
+    static fillCalendarValues(calendarId, defaultValue, maxValue) {
+        const calendarElement = document.getElementById(calendarId);
+        if (!calendarElement) {
+            throw 'Wrong calendar id';
+        }
+        if (defaultValue) {
+            calendarElement.setAttribute('value', defaultValue);
+        }
+        if (maxValue) {
+            calendarElement.setAttribute('max', maxValue);
+        }
+    }
 }
 
 function createObject(obj, element) {

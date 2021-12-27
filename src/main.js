@@ -7,7 +7,7 @@ import { dataProvider } from "./config/servicesConfig";
 import TableHandler from "./ui-ux/table-handler";
 import config from "./config/config.json";
 import FormHandler from "./ui-ux/form-handler";
-import { objToExponential } from "./utilities/extensions";
+import { objToExponential, convertDate } from "./utilities/extensions";
 
 /***** OBJECTS *****/
 const firstObservationDay = '2020-01-22';
@@ -70,6 +70,9 @@ spinner.wait(async () => {
     fillMapData(continentsData);
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
+
+FormHandler.fillCalendarValues('dateFromHist', undefined, convertDate(new Date()));
+FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDate(new Date()));
 
 fillHistTable(new Date(firstObservationDay), new Date());
 historyFormHandler.addHandler(async data => 
