@@ -5,11 +5,10 @@ export function removeTime(date) {
     return dateWithoutTime;
 }
 
-// Convert Date-object to String with format YYYY-MM-DD
-export function convertDate(dateStr) {
-    let date = new Date(dateStr);
+// Convert Date to String with format YYYY-MM-DD
+export function convertDate(date) {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-}
+} 
 
 // Getting the previous day from specified Date
 export function getPreviousDay(selectedDay) {
