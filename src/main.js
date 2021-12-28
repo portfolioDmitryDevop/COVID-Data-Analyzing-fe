@@ -30,6 +30,7 @@ let countCountry;
 
 /***** FUNCTIONS *****/
 async function poller() {
+    dashboard.showPlaceHolders();
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillDashboard(continentsData);
     fillMapData(continentsData);
@@ -115,6 +116,14 @@ spinner.wait(async () => {
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
 
+window.checkboxSelector = async function(boolean) {
+    const list = document.querySelectorAll("#countries-list [name]");
+    for (let index = 0; index < list.length; index++) {
+        list[index].checked = boolean == "true";
+    }
+}
+
+/***** HANDLERS *****/
 FormHandler.fillCalendarValues('dateFromHist', undefined, convertDate(new Date()));
 FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDate(new Date()));
 FormHandler.fillCalendarValues('dateFromStat', undefined, convertDate(new Date()));

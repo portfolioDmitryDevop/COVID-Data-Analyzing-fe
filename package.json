@@ -26,6 +26,7 @@
     "bootstrap-icons": "^1.7.2",
     "css-loader": "^6.5.1",
     "lodash": "^4.17.21",
-    "style-loader": "^3.3.1"
+    "style-loader": "^3.3.1",
+    "svg-country-flags": "^1.2.10"
   }
 }
