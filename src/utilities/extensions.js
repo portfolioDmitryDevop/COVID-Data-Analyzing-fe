@@ -30,10 +30,10 @@ function dateMinusOne(date) {
 }
 
 export function convertToHumanReadbleNumber(obj) { 
-    Object.keys(obj).forEach(key => {
-        if (typeof obj[key] == 'number'){
-            obj[key] = obj[key].toLocaleString("en");
-        }
-    });
+    // Object.keys(obj).forEach(key => {
+    //     if (typeof obj[key] == 'number'){
+    //         obj[key] = obj[key].toLocaleString("en");
+    //     }
+    // });
     return obj;
 }

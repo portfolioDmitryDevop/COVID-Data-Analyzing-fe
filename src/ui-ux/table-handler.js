@@ -54,6 +54,9 @@ export default class TableHandler {
                 ${obj[key]}</td>`;
         }
         else {
+            if (typeof obj[key] == 'number'){
+                return `<td> ${obj[key].toLocaleString("tu")}</td>`;
+            }
             return `<td>${obj[key]}</td>`;
         }
     }
