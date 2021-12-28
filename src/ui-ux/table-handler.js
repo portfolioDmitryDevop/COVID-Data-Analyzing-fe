@@ -31,7 +31,7 @@ export default class TableHandler {
         this.#bodyElement.innerHTML = ' ';
     }
     addRowImPosition(obj, position) {
-        this.#bodyElement.innerHTML += `<tr><td style="width: 30px; padding-right: 0">${position}</td>${this.#getRecordData(obj, position)}</tr>`;
+        this.#bodyElement.innerHTML += `<tr><td width="3%" style="padding-right: 0; text-align: center;">${position}</td>${this.#getRecordData(obj, position)}</tr>`;
     }
     addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
@@ -48,16 +48,16 @@ export default class TableHandler {
         }
         if (key === 'country') {
             let flagImg = obj[key] == 'Sri Lanka' ? 'lk.png' : `${obj['iso']}.png`;
-            return `<td>
+            return `<td width="37%">
                 <img src="node_modules/svg-country-flags/png100px/${flagImg}" 
                     style="height: 15px; width: 25px; margin-bottom: 3px"> 
                 ${obj[key]}</td>`;
         }
         else {
             if (typeof obj[key] == 'number'){
-                return `<td> ${obj[key].toLocaleString("tu")}</td>`;
+                return `<td width="20%"> ${obj[key].toLocaleString("ru")}</td>`;
             }
-            return `<td>${obj[key]}</td>`;
+            return `<td width="20%">${obj[key]}</td>`;
         }
     }
     repaintTableHendler(key, headerId) {
@@ -93,11 +93,11 @@ function fillTableHeader(headerElement, keys, sortFun) {
 function getColumns(keys, sortFun) {
     return keys.map(key => {
         if(key == `deaths`){
-            return  `<th style="cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short"></i></th>`
+            return  `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short"></i></th>`
         }
 
         return !sortFun || key == '' || key == 'country' ? `<th>${key}</th>`
-            : `<th style="cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short d-none"></i></th>`;
+            : `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short d-none"></i></th>`;
     })
         .join('');
 }

@@ -7,7 +7,7 @@ import { dataProvider } from "./config/servicesConfig";
 import TableHandler from "./ui-ux/table-handler";
 import config from "./config/config.json";
 import FormHandler from "./ui-ux/form-handler";
-import { convertToHumanReadbleNumber, convertDate } from "./utilities/extensions";
+import { convertDate } from "./utilities/extensions";
 import DashboardHandler from "./ui-ux/dashboard-handler";
 import _ from "lodash";
 
@@ -16,15 +16,15 @@ FormHandler.fillCheckBoxes('countries-list', config.countriesList, 'countries');
 
 /***** OBJECTS *****/
 const firstObservationDay = '2020-01-22';
-const dataProcessor = new DataProcessor(dataProvider, config);
+const dataProcessor = new DataProcessor(dataProvider);
 const spinner = new Spinner("spinner");
 const dashboard = new DashboardHandler('map', 'dashboard', 'conventions');
 const historyTableHandler = new TableHandler('history-header', 'history-body',
     ['', 'country', 'confirmed', 'deaths', 'vaccinated'], historySort);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
     ['', 'country', 'confirmed', 'deaths', 'vaccinated'], statSort);
-const historyFormHandler = new FormHandler('history-form', 'alert');
-const statFormHandler = new FormHandler('stat-form', 'alert');
+const historyFormHandler = new FormHandler('history-form');
+const statFormHandler = new FormHandler('stat-form');
 let countCountry;
 const alertEl = document.getElementById('alert');
 
@@ -63,11 +63,11 @@ function fillHistTable(from, to, num) {
             let histArr = await dataProcessor.getHistoryStatistics(from, to);
             if (num == '' || num == undefined) {
                 histArr.forEach(obj => {
-                    historyTableHandler.addRowImPosition(convertToHumanReadbleNumber(obj), counter++);
+                    historyTableHandler.addRowImPosition(obj, counter++);
                 });
             } else {
                 for (let i = 0; i < num; i++) {
-                    historyTableHandler.addRowImPosition(convertToHumanReadbleNumber(histArr[i]), counter++);
+                    historyTableHandler.addRowImPosition(histArr[i], counter++);
                 }
             }
         }
@@ -89,7 +89,7 @@ function fillStatTable(from, to, countries) {
             let statArr =
                 await dataProcessor.getHistoryStatisticsByCountries(countries, from, to);
             statArr.forEach(obj => {
-                statTableHandler.addRowImPosition(convertToHumanReadbleNumber(obj), counter++);
+                statTableHandler.addRowImPosition(obj, counter++);
             });
         } catch (error) {
             showAlert(alertEl, error);
@@ -104,7 +104,7 @@ function statSort(key, headerId){
         statTableHandler.clear();
         let counter = 1;
         const sorted = dataProcessor.sort(key, headerId, countCountry);
-        sorted.forEach(c => statTableHandler.addRowImPosition(convertToHumanReadbleNumber(c), counter++));
+        sorted.forEach(c => statTableHandler.addRowImPosition(c, counter++));
     })
 }
 
@@ -115,7 +115,7 @@ function historySort(key, headerId){
         historyTableHandler.clear();
         let counter = 1;
         const sorted = dataProcessor.sort(key, headerId, countCountry);
-        sorted.forEach(c => historyTableHandler.addRowImPosition(convertToHumanReadbleNumber(c), counter++));
+        sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));
     })
 }
 

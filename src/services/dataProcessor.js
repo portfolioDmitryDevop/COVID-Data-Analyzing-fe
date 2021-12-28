@@ -5,16 +5,12 @@ import { convertDate, getPreviousDay, removeTime } from "../utilities/extensions
 export default class DataProcessor {
 
     #dataProvider;
-    #config;
     #dataHistoryAll;
     #dataHistoryCountry;
     #tableSort = [];
 
-
-
-    constructor(dataProvider, config) {
+    constructor(dataProvider) {
         this.#dataProvider = dataProvider;
-        this.#config = config;
     }
 
     /* STAT BY CONTINENT REQUEST */
