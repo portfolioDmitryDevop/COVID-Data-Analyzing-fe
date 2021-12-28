@@ -1,5 +1,5 @@
 {
-    "pollingIntervalInSeconds": 60,
+    "pollingIntervalInSeconds": 30,
     "continentColors": {
         "europe": "rgb(73, 163, 208)",
         "asia": "rgb(242, 127, 56)",
@@ -19,6 +19,8 @@
         "Israel",
         "Kenya",
         "New Zealand",
-        "Russia"
+        "Russia",
+        "Germany",
+        "Canada"
     ]
 }

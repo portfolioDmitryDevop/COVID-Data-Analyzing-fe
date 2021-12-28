@@ -29,11 +29,10 @@ function dateMinusOne(date) {
     return removeTime(previous);
 }
 
-export function objToExponential(obj) {
+export function convertToHumanReadbleNumber(obj) { 
     Object.keys(obj).forEach(key => {
         if (typeof obj[key] == 'number'){
-            let oldVal = obj[key];
-            obj[key] = oldVal.toExponential(2);
+            obj[key] = obj[key].toLocaleString("en");
         }
     });
     return obj;
