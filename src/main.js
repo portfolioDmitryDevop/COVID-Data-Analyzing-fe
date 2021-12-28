@@ -74,7 +74,7 @@ function fillStatTable(from, to, countries) {
     statTableHandler.clear();
     let counter = 1;
     spinner.wait(async () => {
-        if (countries == undefined || countries.length == 0) {
+        if (countries == undefined) {
             countries = config.countriesList;
         }
         let statArr = 
