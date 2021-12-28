@@ -52,7 +52,7 @@ function fillDashboard(continentsArr) {
     dashboard.addConventions();
 }
 
-function fillHistTable(from, to, num) {
+function fillHistTable(from, to, num) {    
     spinner.wait(async () => {
         historyTableHandler.clear();
         countCountry = num;
@@ -76,9 +76,10 @@ function fillHistTable(from, to, num) {
         }
 
     });
+    statTableHandler.repaintTableHendler('deaths', 'history-header', 'default');
 }
 function fillStatTable(from, to, countries) {
-    statTableHandler.clear();
+    statTableHandler.clear();    
     let counter = 1;
     spinner.wait(async () => {
         if (countries == undefined) {
@@ -95,13 +96,14 @@ function fillStatTable(from, to, countries) {
             showAlert(alertEl, error);
         }
     });
+    statTableHandler.repaintTableHendler('deaths', 'stat-header', 'default');
 }
 
 function statSort(key, headerId){
     if (spinner.status()) return;
-    historyTableHandler.repaintTableHendler(key, headerId);
-    spinner.wait(async () => {
-        statTableHandler.clear();
+    statTableHandler.clear();
+    historyTableHandler.repaintTableHendler(key, headerId);    
+    spinner.wait(async () => {        
         let counter = 1;
         const sorted = dataProcessor.sort(key, headerId, countCountry);
         sorted.forEach(c => statTableHandler.addRowImPosition(c, counter++));
@@ -110,9 +112,9 @@ function statSort(key, headerId){
 
 function historySort(key, headerId){
     if (spinner.status()) return;
-    historyTableHandler.repaintTableHendler(key, headerId);
-    spinner.wait(async () => {
-        historyTableHandler.clear();
+    historyTableHandler.clear();
+    historyTableHandler.repaintTableHendler(key, headerId);    
+    spinner.wait(async () => {        
         let counter = 1;
         const sorted = dataProcessor.sort(key, headerId, countCountry);
         sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));

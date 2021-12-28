@@ -61,7 +61,7 @@ export default class TableHandler {
             return `<td width="20%">${obj[key]}</td>`;
         }
     }
-    repaintTableHendler(key, headerId) {
+    repaintTableHendler(key, headerId, byDefault) {
         let oldDown = document.getElementsByClassName("bi bi-arrow-down-short");
         let oldUp = document.getElementsByClassName("bi bi-arrow-up-short");
 
@@ -80,10 +80,15 @@ export default class TableHandler {
             }
         }
         let element = document.querySelector(`#${headerId} #${key}`);
-        if (element.className == "bi bi-arrow-down-short d-none") {
+        if (byDefault) {
             element.className = "bi bi-arrow-up-short";
-        } else {
-            element.className = "bi bi-arrow-down-short";
+        }
+        else {
+            if (element.className == "bi bi-arrow-down-short d-none") {
+                element.className = "bi bi-arrow-up-short";
+            } else {
+                element.className = "bi bi-arrow-down-short";
+            }
         }
     }
 }
@@ -94,10 +99,6 @@ function fillTableHeader(headerElement, keys, sortFun) {
 
 function getColumns(keys, sortFun) {
     return keys.map(key => {
-        if (key == `deaths`) {
-            return `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short"></i></th>`
-        }
-
         return !sortFun || key == '' || key == 'country' ? `<th>${key}</th>`
             : `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short d-none"></i></th>`;
     })
