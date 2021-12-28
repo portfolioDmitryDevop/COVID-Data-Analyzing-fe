@@ -7,6 +7,7 @@ export default class DataProcessor {
     #dataProvider;
     #config;
     #dataHistoryAll;
+    #dataHistoryCountry;
     #tableSort = [];
 
 
@@ -176,10 +177,14 @@ export default class DataProcessor {
 
     async getHistoryStatisticsByCountries(countries, from, to) {
         const allData = await this.getHistoryStatistics(from, to)
-        return _.filter(allData, function (o) { return countries.includes(o.country); });
+        this.#dataHistoryCountry = _.filter(allData, function (o) { return countries.includes(o.country); });
+        return this.#dataHistoryCountry;
     }
 
     sort(key, headerId, count) {
+        
+        
+
         if (this.#tableSort[headerId] == undefined) {
             this.#tableSort[headerId] = { country: true, confirmed: true, deaths: true, vaccinated: true };
         }
@@ -190,6 +195,12 @@ export default class DataProcessor {
         if(count == undefined) {
             count = this.#dataHistoryAll.length;
         }
+        let data;
+        if(headerId == "stat-header"){
+            data = this.#dataHistoryCountry;
+        }   else {
+            data = this.#dataHistoryAll;
+        }
 
  
         switch (key) {
@@ -197,37 +208,37 @@ export default class DataProcessor {
             case "country":{
                 
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                    return _.sortBy(this.#dataHistoryAll, key).slice(0, count);
+                    return _.sortBy(data, key).slice(0, count);
                 } else {
-                    return _.sortBy(this.#dataHistoryAll, key).reverse().slice(0, count);
+                    return _.sortBy(data, key).reverse().slice(0, count);
                 }
             }
             case "confirmed":               {
                     if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                        const res = _.sortBy(this.#dataHistoryAll, "confirmedRate");
+                        const res = _.sortBy(data, "confirmedRate");
                         return res.slice(0, count);
                     } else {
-                        const res = _.sortBy(this.#dataHistoryAll, "confirmedRate").reverse();
+                        const res = _.sortBy(data, "confirmedRate").reverse();
                         return res.slice(0, count);
                     }
                 }
             case "deaths":{
                  
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                    const res = _.sortBy(this.#dataHistoryAll, "deathsRate");
+                    const res = _.sortBy(data, "deathsRate");
                    return res.slice(0, count);
                } else {
-                const res = _.sortBy(this.#dataHistoryAll, "deathsRate").reverse();
+                const res = _.sortBy(data, "deathsRate").reverse();
                    return res.slice(0, count);
                }
             }
             case "vaccinated":{
                 
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                    const res = _.sortBy(this.#dataHistoryAll, "vaccinatedRate");
+                    const res = _.sortBy(data, "vaccinatedRate");
                     return res.slice(0, count);
                 } else {
-                    const res = _.sortBy(this.#dataHistoryAll, "vaccinatedRate").reverse();
+                    const res = _.sortBy(data, "vaccinatedRate").reverse();
                     return res.slice(0, count);
                 }
             }
