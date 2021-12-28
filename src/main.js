@@ -86,6 +86,7 @@ function fillStatTable(from, to, countries) {
 }
 
 function statSort(key, headerId){
+    if (spinner.status()) return;
     historyTableHandler.repaintTableHendler(key, headerId);
     spinner.wait(async () => {
         statTableHandler.clear();
@@ -96,6 +97,7 @@ function statSort(key, headerId){
 }
 
 function historySort(key, headerId){
+    if (spinner.status()) return;
     historyTableHandler.repaintTableHendler(key, headerId);
     spinner.wait(async () => {
         historyTableHandler.clear();
