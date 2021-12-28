@@ -7,7 +7,7 @@ import { dataProvider } from "./config/servicesConfig";
 import TableHandler from "./ui-ux/table-handler";
 import config from "./config/config.json";
 import FormHandler from "./ui-ux/form-handler";
-import { objToExponential, convertDate } from "./utilities/extensions";
+import { convertToHumanReadbleNumber, convertDate } from "./utilities/extensions";
 import DashboardHandler from "./ui-ux/dashboard-handler";
 import _ from "lodash";
 
@@ -33,7 +33,6 @@ async function poller() {
     dashboard.showPlaceHolders();
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillDashboard(continentsData);
-    fillMapData(continentsData);
 }
 function fillDashboard(continentsArr) {
     const worldStat = {confirmedAmount: 0, deathsAmount: 0, vaccinatedAmount: 0, population: 0};
@@ -52,9 +51,7 @@ function fillDashboard(continentsArr) {
     dashboard.addGlobalEntry(worldStat);
     dashboard.addConventions();
 }
-function fillMapData(continentsArr) {
 
-}
 function fillHistTable(from, to, num) {
     spinner.wait(async () => {
         historyTableHandler.clear();
@@ -63,11 +60,11 @@ function fillHistTable(from, to, num) {
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
         if (num == '' || num == undefined) {
             histArr.forEach(obj => {
-                historyTableHandler.addRowImPosition(objToExponential(obj), counter++);
+                historyTableHandler.addRowImPosition(convertToHumanReadbleNumber(obj), counter++);
             });
         } else {
             for (let i = 0; i < num; i++) {
-                historyTableHandler.addRowImPosition(objToExponential(histArr[i]), counter++);
+                historyTableHandler.addRowImPosition(convertToHumanReadbleNumber(histArr[i]), counter++);
             }
         }
     });
@@ -83,7 +80,7 @@ function fillStatTable(from, to, countries) {
         let statArr = 
             await dataProcessor.getHistoryStatisticsByCountries(countries, from, to);
         statArr.forEach(obj => {
-            statTableHandler.addRowImPosition(objToExponential(obj),  counter++);
+            statTableHandler.addRowImPosition(convertToHumanReadbleNumber(obj),  counter++);
         })
     });
 }
@@ -108,13 +105,12 @@ function historySort(key, headerId){
     })
 }
 
-/***** ACTIONS *****/
-spinner.wait(async () => {
+async function firstLoad() {
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillDashboard(continentsData);
-    fillMapData(continentsData);
-});
-setInterval(poller, config.pollingIntervalInSeconds * 1000);
+    fillHistTable(new Date(firstObservationDay), new Date());
+    fillStatTable(new Date(firstObservationDay), new Date());
+}
 
 window.checkboxSelector = async function(boolean) {
     const list = document.querySelectorAll("#countries-list [name]");
@@ -123,17 +119,22 @@ window.checkboxSelector = async function(boolean) {
     }
 }
 
+
 /***** HANDLERS *****/
 FormHandler.fillCalendarValues('dateFromHist', undefined, convertDate(new Date()));
 FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDate(new Date()));
 FormHandler.fillCalendarValues('dateFromStat', undefined, convertDate(new Date()));
 FormHandler.fillCalendarValues('dateToStat', convertDate(new Date()), convertDate(new Date()));
-
-fillHistTable(new Date(firstObservationDay), new Date());
 historyFormHandler.addHandler(data => 
     fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
-
-fillStatTable(new Date(firstObservationDay), new Date());
 statFormHandler.addHandler(data => {
     fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries);
 });
+
+
+/***** ACTIONS *****/
+firstLoad();
+setInterval(poller, config.pollingIntervalInSeconds * 1000);
+
+
+
