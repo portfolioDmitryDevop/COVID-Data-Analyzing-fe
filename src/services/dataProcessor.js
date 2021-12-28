@@ -155,11 +155,11 @@ export default class DataProcessor {
     }
 
     #validateInputDates(from, to) {
-        if (from == undefined || to == undefined) throw new Error("Both dates must be specified for a historical request.");
-        if (from >= to) throw new Error("From date can't be equal or higher than To date.");
-        if (from < new Date('2020-01-22T00:00:00')) { throw new Error("There is no data on the epidemic earlier than 01/22/2020.") };
+        if (from == undefined || to == undefined) throw 'Both dates must be specified for a historical request';
+        if (from >= to) throw "From date can't be equal or higher than To date";
+        if (from < new Date('2020-01-22T00:00:00')) { throw 'There is no data on the epidemic earlier than 01/22/2020' };
         const currentDay = removeTime(new Date()).getTime();
-        if (removeTime(from).getTime() > currentDay || removeTime(to).getTime() > currentDay) throw new Error("Historical requests for the future are not available.");
+        if (removeTime(from).getTime() > currentDay || removeTime(to).getTime() > currentDay) throw 'Historical requests for the future are not available';
     }
 
     // Correct the interval if the period is set to one day
