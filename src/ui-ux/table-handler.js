@@ -62,8 +62,9 @@ export default class TableHandler {
         }
     }
     repaintTableHendler(key, headerId) {
-        let oldDown = document.getElementsByClassName("bi bi-arrow-down-short");
-        let oldUp = document.getElementsByClassName("bi bi-arrow-up-short");
+
+        let oldDown = document.querySelectorAll(`#${headerId} .bi-arrow-down-short`);
+        let oldUp = document.querySelectorAll(`#${headerId} .bi-arrow-up-short`);
 
         if (oldDown != undefined) {
             for (const key in oldDown) {
