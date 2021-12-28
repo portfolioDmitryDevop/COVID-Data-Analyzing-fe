@@ -28,12 +28,3 @@ function dateMinusOne(date) {
     previous.setDate(date.getDate() - 1);
     return removeTime(previous);
 }
-
-export function convertToHumanReadbleNumber(obj) { 
-    // Object.keys(obj).forEach(key => {
-    //     if (typeof obj[key] == 'number'){
-    //         obj[key] = obj[key].toLocaleString("en");
-    //     }
-    // });
-    return obj;
-}

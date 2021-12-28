@@ -27,9 +27,9 @@ export default class DashboardHandler {
         <div class="col-md-5 rounded rounded-3 me-2 mb-2 shadow bg-info">
               <ul class="list-unstyled pt-3 ps-2">
                 <li><i class="bi bi bi-globe"></i><span class="fw-bold"> World</span></li>
-                <li><i class="bi bi-check-circle"></i> ${((data.confirmedAmount / data.population) * 100).toFixed(2)}% <span style="font-size: small;">(${data.confirmedAmount.toLocaleString("en")} people)</span></li> 
-                <li><i class="bi bi-emoji-dizzy"></i> ${((data.deathsAmount / data.population) * 100).toFixed(2) }% <span style="font-size: small;">(${data.deathsAmount.toLocaleString("en")} people)</span></li> 
-                <li><i class="bi bi-shield-shaded"></i> ${((data.vaccinatedAmount / data.population) * 100).toFixed(2)}% <span style="font-size: small;">(${data.vaccinatedAmount.toLocaleString("en")} people)</span></li> 
+                <li><i class="bi bi-check-circle"></i> ${((data.confirmedAmount / data.population) * 100).toFixed(2)}% <span style="font-size: small;">(${data.confirmedAmount.toLocaleString("ru")} people)</span></li> 
+                <li><i class="bi bi-emoji-dizzy"></i> ${((data.deathsAmount / data.population) * 100).toFixed(2) }% <span style="font-size: small;">(${data.deathsAmount.toLocaleString("ru")} people)</span></li> 
+                <li><i class="bi bi-shield-shaded"></i> ${((data.vaccinatedAmount / data.population) * 100).toFixed(2)}% <span style="font-size: small;">(${data.vaccinatedAmount.toLocaleString("ru")} people)</span></li> 
               </ul>
             </div>
             <div class="col-md-5 rounded rounded-3 me-2 mb-2"></div>
@@ -41,9 +41,9 @@ export default class DashboardHandler {
         const confirmPr = data.confirmed.toFixed(2);
         const deathsPr = data.deaths.toFixed(3);
         const vaccinetedPr = data.vaccinated.toFixed(2);
-        const confirmAm = data.confirmedAmount.toLocaleString("en")
-        const deathsAm = data.deathsAmount.toLocaleString("en")
-        const vaccineAm = data.vaccinatedAmount.toLocaleString("en")
+        const confirmAm = data.confirmedAmount.toLocaleString("ru")
+        const deathsAm = data.deathsAmount.toLocaleString("ru")
+        const vaccineAm = data.vaccinatedAmount.toLocaleString("ru")
 
         // Fill mobile view
         this.#dashboard.innerHTML += `

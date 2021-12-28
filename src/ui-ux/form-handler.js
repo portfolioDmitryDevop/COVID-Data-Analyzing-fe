@@ -1,16 +1,12 @@
 export default class FormHandler {
 
     #formElement;
-    #alertElement;
     #inputElements;
 
-    constructor(formId, alertId) {
+    constructor(formId) {
         this.#formElement = document.getElementById(formId);
         if(!this.#formElement) {
             throw "Wrong form id " + formId;
-        }
-        if(alertId){
-            this.#alertElement = document.getElementById(alertId);
         }
         this.#inputElements = document.querySelectorAll(`#${formId} [name]`);
         if (!this.#inputElements || this.#inputElements.length == 0) {
