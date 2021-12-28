@@ -83,6 +83,7 @@ function historySort(key, headerId){
 
 function fillStatTable(from, to, countries) {
     statTableHandler.clear();
+    let counter = 1;
     spinner.wait(async () => {
         if (countries == undefined || countries.length == 0) {
             countries = config.countriesList;
@@ -90,7 +91,7 @@ function fillStatTable(from, to, countries) {
         let statArr = 
             await dataProcessor.getHistoryStatisticsByCountries(countries, from, to);
         statArr.forEach(obj => {
-            statTableHandler.addRow(objToExponential(obj));
+            statTableHandler.addRowImPosition(objToExponential(obj),  counter++);
         })
     });
 }
