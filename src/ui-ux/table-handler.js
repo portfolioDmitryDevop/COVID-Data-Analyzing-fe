@@ -46,9 +46,15 @@ export default class TableHandler {
         if(obj[key] == undefined){
             return ``;
         }
-        return `<td>${obj[key].constructor.name === "Date" 
-            ? obj[key].toISOString().substr(0,10) 
-            : obj[key]}</td>`
+        if (key === 'country') {
+            let flagImg = obj[key] == 'Sri Lanka' ? 'lk.png' : `${obj['iso']}.png`;
+            return `<td>
+                <img src="node_modules/svg-country-flags/png100px/${flagImg}" style="width: 25px">
+                ${obj[key]}</td>`;
+        }
+        else {
+            return `<td>${obj[key]}</td>`;
+        }
     }
 }
 
