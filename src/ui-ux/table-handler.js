@@ -19,13 +19,20 @@ export default class TableHandler {
         }
         if (sortFun){
             const columnsEl = document.querySelectorAll(`#${headerId} th`);
-            columnsEl.forEach(c => c.addEventListener('click', 
-                sortFun.bind(this, c.textContent, headerId)));
+            columnsEl.forEach(c => {
+                if(c.innerHTML != "country" && c.innerHTML != ""){
+                    c.addEventListener('click', 
+                    sortFun.bind(this, c.textContent, headerId));
+                }
+            });
         }
     }
     clear() {
         this.#bodyElement.innerHTML = ' ';
     }
+    addRowImPosition(obj, position) {
+        this.#bodyElement.innerHTML += `<tr><td>${position}</td>${this.#getRecordData(obj,position)}</tr>`;
+        }
     addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
     }
@@ -36,9 +43,18 @@ export default class TableHandler {
         return this.#keys.map(key => this.#getColumnData(obj, key)).join('');
     }
     #getColumnData(obj, key) {
-        return `<td>${obj[key].constructor.name === "Date" 
-            ? obj[key].toISOString().substr(0,10) 
-            : obj[key]}</td>`
+        if(obj[key] == undefined){
+            return ``;
+        }
+        if (key === 'country') {
+            let flagImg = obj[key] == 'Sri Lanka' ? 'lk.png' : `${obj['iso']}.png`;
+            return `<td>
+                <img src="node_modules/svg-country-flags/png100px/${flagImg}" style="width: 25px">
+                ${obj[key]}</td>`;
+        }
+        else {
+            return `<td>${obj[key]}</td>`;
+        }
     }
 }
 
@@ -47,7 +63,7 @@ function fillTableHeader(headerElement, keys, sortFun) {
 }
 function getColumns(keys, sortFun) {
     return keys.map(key => {
-        return !sortFun ? `<th>${key}</th>` 
+        return !sortFun || key == '' || key == 'country'  ? `<th>${key}</th>` 
             : `<th style="cursor: pointer">${key}</th>`;
     })
     .join('');

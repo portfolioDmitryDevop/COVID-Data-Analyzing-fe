@@ -8,7 +8,7 @@ export default class DataProcessor {
     #config;
     #dataHistoryAll;
     #tableSort = [];
-    
+
 
 
     constructor(dataProvider, config) {
@@ -110,30 +110,47 @@ export default class DataProcessor {
 
         for (const key in confirmed) {
             if (confirmed.hasOwnProperty(key)) {
-                const statCase = await this.#createStatCase(confirmed[key], death[key],objVaccines[key], fromDate, toDate);
+                const statCase = await this.#createStatCase(confirmed[key], death[key], objVaccines[key], fromDate, toDate);
                 if (statCase != null) arrCases.push(statCase);
             }
         }
-        this.#dataHistoryAll = arrCases;
-        return arrCases;
+        this.#dataHistoryAll = _.sortBy(arrCases, "deathsRate");;
+        return this.#dataHistoryAll;
     }
 
-    async #createStatCase(confirmedData, deathData,objVaccines, from, to) {
+    async #createStatCase(confirmedData, deathData, objVaccines, from, to) {
         const country = confirmedData.All.country;
-        if (country != undefined) {
+        try {
+            if(!this.#validateStatCase(confirmedData, objVaccines)){
+                return;
+            }
+        } catch (error) {
+            return;
+        }
+
+        if (country != undefined && objVaccines != undefined ) {
             const population = confirmedData.All.population;
             const iso = confirmedData.All.abbreviation;
             const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
             const death = this.#parseDatesData(deathData.All.dates, population, from, to);
             const vaccinated = objVaccines != undefined ? objVaccines.All.people_vaccinated : 0;
-            const statCaseDataObject = createStatDataObject(iso, country, confirmed.percent, death.percent, vaccinated / population, confirmed.amount, death.amount, vaccinated);
+            const statCaseDataObject = createStatDataObject(iso, country, confirmed.rate, death.rate, vaccinated / population, confirmed.amount, death.amount, vaccinated);
             return statCaseDataObject;
         }
     }
 
+    #validateStatCase(confirmedData, objVaccines){
+        return objVaccines != undefined &&
+        confirmedData != undefined &&
+        objVaccines.All != undefined &&
+        confirmedData.All != undefined &&
+        confirmedData.All.population != 0 &&
+        objVaccines.All.people_vaccinated != 0;
+    }
+
     #parseDatesData(data, population, from, to) {
         const count = data[to] - data[from];
-        return { percent: count / population, amount: count };
+        return { rate: count / population, amount: count };
     }
 
     #validateInputDates(from, to) {
@@ -153,7 +170,7 @@ export default class DataProcessor {
         } else {
             return convertDate(from);
         }
-    }    
+    }
 
     /* HISTORICAL REQUEST BY COUNTRIES */
 
@@ -162,22 +179,65 @@ export default class DataProcessor {
         return _.filter(allData, function (o) { return countries.includes(o.country); });
     }
 
-    sort(key, headerId) {
+    sort(key, headerId, count) {
+        if (this.#tableSort[headerId] == undefined) {
+            this.#tableSort[headerId] = { country: true, confirmed: true, deaths: true, vaccinated: true };
+        }
+        let arr = [];
+        arr.length;
 
-        // console.log(headerId);
 
-        if(this.#tableSort[headerId] == undefined){
-            this.#tableSort[headerId] = {country : true, confirmed: true, deaths: true, vaccinated: true};
+        if(count == undefined) {
+            count = this.#dataHistoryAll.length;
         }
 
-        if(this.#isReverseSort(key, this.#tableSort[headerId])){
-            return _.sortBy(this.#dataHistoryAll, key);
-        } else {
-            return _.sortBy(this.#dataHistoryAll, key).reverse();
+ 
+        switch (key) {
+
+            case "country":{
+                
+                if (this.#isReverseSort(key, this.#tableSort[headerId])) {
+                    return _.sortBy(this.#dataHistoryAll, key).slice(0, count);
+                } else {
+                    return _.sortBy(this.#dataHistoryAll, key).reverse().slice(0, count);
+                }
+            }
+            case "confirmed":               {
+                    if (this.#isReverseSort(key, this.#tableSort[headerId])) {
+                        const res = _.sortBy(this.#dataHistoryAll, "confirmedRate");
+                        return res.slice(0, count);
+                    } else {
+                        const res = _.sortBy(this.#dataHistoryAll, "confirmedRate").reverse();
+                        return res.slice(0, count);
+                    }
+                }
+            case "deaths":{
+                 
+                if (this.#isReverseSort(key, this.#tableSort[headerId])) {
+                    const res = _.sortBy(this.#dataHistoryAll, "deathsRate");
+                   return res.slice(0, count);
+               } else {
+                const res = _.sortBy(this.#dataHistoryAll, "deathsRate").reverse();
+                   return res.slice(0, count);
+               }
+            }
+            case "vaccinated":{
+                
+                if (this.#isReverseSort(key, this.#tableSort[headerId])) {
+                    const res = _.sortBy(this.#dataHistoryAll, "vaccinatedRate");
+                    return res.slice(0, count);
+                } else {
+                    const res = _.sortBy(this.#dataHistoryAll, "vaccinatedRate").reverse();
+                    return res.slice(0, count);
+                }
+            }
+
+            default:
+                break;
         }
+
     }
-    // #sortFlag = {country : true, confirmed: true, deaths: true, vaccinated: true};
-    #isReverseSort(key, sortFlag){
+    #isReverseSort(key, sortFlag) {
         const res = sortFlag[key];
         sortFlag[key] = !sortFlag[key];
         return res;
