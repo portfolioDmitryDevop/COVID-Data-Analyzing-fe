@@ -31,13 +31,15 @@ export default class TableHandler {
         this.#bodyElement.innerHTML = ' ';
     }
     addRowImPosition(obj, position) {
-        this.#bodyElement.innerHTML += `<tr><td>${position}</td>${this.#getRecordData(obj,position)}</tr>`;
+        this.#bodyElement.innerHTML += `<tr><td style="width: 30px; padding-right: 0">${position}</td>
+            ${this.#getRecordData(obj,position)}</tr>`;
         }
     addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
     }
     addRowColored(obj, color) {
-        this.#bodyElement.innerHTML += `<tr style="background-color:${color};">${this.#getRecordData(obj)}</tr>`;
+        this.#bodyElement.innerHTML += `<tr style="background-color:${color};">
+            ${this.#getRecordData(obj)}</tr>`;
     }
     #getRecordData(obj) {
         return this.#keys.map(key => this.#getColumnData(obj, key)).join('');
@@ -49,7 +51,8 @@ export default class TableHandler {
         if (key === 'country') {
             let flagImg = obj[key] == 'Sri Lanka' ? 'lk.png' : `${obj['iso']}.png`;
             return `<td>
-                <img src="node_modules/svg-country-flags/png100px/${flagImg}" style="width: 25px">
+                <img src="node_modules/svg-country-flags/png100px/${flagImg}" 
+                    style="height: 15px; width: 25px; margin-bottom: 3px"> 
                 ${obj[key]}</td>`;
         }
         else {
