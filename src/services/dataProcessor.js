@@ -5,16 +5,14 @@ import { convertDate, getPreviousDay, removeTime } from "../utilities/extensions
 export default class DataProcessor {
 
     #dataProvider;
-    #config;
     #dataHistoryAll;
     #dataHistoryCountry;
     #tableSort = [];
+    #useRates;
 
-
-
-    constructor(dataProvider, config) {
+    constructor(dataProvider, useRates) {
         this.#dataProvider = dataProvider;
-        this.#config = config;
+        this.#useRates = useRates;
     }
 
     /* STAT BY CONTINENT REQUEST */
@@ -115,7 +113,7 @@ export default class DataProcessor {
                 if (statCase != null) arrCases.push(statCase);
             }
         }
-        this.#dataHistoryAll = _.sortBy(arrCases, "deathsRate");;
+        this.#dataHistoryAll = _.sortBy(arrCases, "deaths").reverse();
         return this.#dataHistoryAll;
     }
 
@@ -135,9 +133,20 @@ export default class DataProcessor {
             const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
             const death = this.#parseDatesData(deathData.All.dates, population, from, to);
             const vaccinated = objVaccines != undefined ? objVaccines.All.people_vaccinated : 0;
-            const statCaseDataObject = createStatDataObject(iso, country, confirmed.rate, death.rate, vaccinated / population, confirmed.amount, death.amount, vaccinated);
+            // const statCaseDataObject = createStatDataObject(iso, country, confirmed.rate, death.rate, vaccinated / population, confirmed.amount, death.amount, vaccinated);
+            const statCaseDataObject = createStatDataObject(iso, 
+                                                            country, 
+                                                            this.#useRates ? confirmed.amount : confirmed.rate, 
+                                                            this.#useRates ? death.amount : death.rate, 
+                                                            vaccinated / population, 
+                                                            this.#useRates ? confirmed.rate : confirmed.amount, 
+                                                            this.#useRates ? death.rate : confirmed.amount, 
+                                                            this.#useRates ? vaccinated / population : vaccinated);
+                                                 // return {iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated};
+
             return statCaseDataObject;
         }
+
     }
 
     #validateStatCase(confirmedData, objVaccines){
@@ -155,11 +164,11 @@ export default class DataProcessor {
     }
 
     #validateInputDates(from, to) {
-        if (from == undefined || to == undefined) throw new Error("Both dates must be specified for a historical request.");
-        if (from >= to) throw new Error("From date can't be equal or higher than To date.");
-        if (from < new Date('2020-01-22T00:00:00')) { throw new Error("There is no data on the epidemic earlier than 01/22/2020.") };
+        if (from == undefined || to == undefined) throw 'Both dates must be specified for a historical request';
+        if (from >= to) throw "From date can't be equal or higher than To date";
+        if (from < new Date('2020-01-22T00:00:00')) { throw 'There is no data on the epidemic earlier than 01/22/2020' };
         const currentDay = removeTime(new Date()).getTime();
-        if (removeTime(from).getTime() > currentDay || removeTime(to).getTime() > currentDay) throw new Error("Historical requests for the future are not available.");
+        if (removeTime(from).getTime() > currentDay || removeTime(to).getTime() > currentDay) throw 'Historical requests for the future are not available';
     }
 
     // Correct the interval if the period is set to one day
@@ -192,14 +201,16 @@ export default class DataProcessor {
         arr.length;
 
 
-        if(count == undefined) {
-            count = this.#dataHistoryAll.length;
-        }
+  
         let data;
         if(headerId == "stat-header"){
             data = this.#dataHistoryCountry;
         }   else {
             data = this.#dataHistoryAll;
+        }
+
+        if(count == undefined || count == "") {
+            count = data.length;
         }
 
  
@@ -215,30 +226,30 @@ export default class DataProcessor {
             }
             case "confirmed":               {
                     if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                        const res = _.sortBy(data, "confirmedRate");
+                        const res = _.sortBy(data, "confirmed");
                         return res.slice(0, count);
                     } else {
-                        const res = _.sortBy(data, "confirmedRate").reverse();
+                        const res = _.sortBy(data, "confirmed").reverse();
                         return res.slice(0, count);
                     }
                 }
             case "deaths":{
                  
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                    const res = _.sortBy(data, "deathsRate");
+                   const res = _.sortBy(data, "deaths");
                    return res.slice(0, count);
                } else {
-                const res = _.sortBy(data, "deathsRate").reverse();
+                const res = _.sortBy(data, "deaths").reverse();
                    return res.slice(0, count);
                }
             }
             case "vaccinated":{
                 
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                    const res = _.sortBy(data, "vaccinatedRate");
+                    const res = _.sortBy(data, "vaccinated");
                     return res.slice(0, count);
                 } else {
-                    const res = _.sortBy(data, "vaccinatedRate").reverse();
+                    const res = _.sortBy(data, "vaccinated").reverse();
                     return res.slice(0, count);
                 }
             }

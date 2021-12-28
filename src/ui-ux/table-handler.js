@@ -2,9 +2,10 @@ export default class TableHandler {
 
     #keys; // fields of being displayed object
     #bodyElement;
+    #useRates;
 
-    constructor(headerId, bodyId, keys, sortFun) {
-
+    constructor(headerId, bodyId, keys, sortFun, useRates) {
+        this.useRates = useRates;
         this.#keys = keys;
         this.#bodyElement = document.getElementById(bodyId);
         if (!this.#bodyElement) {
@@ -31,9 +32,7 @@ export default class TableHandler {
         this.#bodyElement.innerHTML = ' ';
     }
     addRowImPosition(obj, position) {
-        this.#bodyElement.innerHTML += `<tr><td style="width: 30px; padding-right: 0">${position}</td>
-            ${this.#getRecordData(obj,position)}</tr>`;
-        }
+        this.#bodyElement.innerHTML += `<tr><td width="3%" style="padding-right: 0; text-align: center;">${position}</td>${this.#getRecordData(obj, position)}</tr>`;
     addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
     }
@@ -44,20 +43,22 @@ export default class TableHandler {
         return this.#keys.map(key => this.#getColumnData(obj, key)).join('');
     }
     #getColumnData(obj, key) {
-        if (obj[key] == undefined) {
+        if(obj[key] == undefined){
             return ``;
         }
-
         if (key === 'country') {
             let flagImg = obj[key] == 'Sri Lanka' ? 'lk.png' : `${obj['iso']}.png`;
-            return `<td>
-                <img src="node_modules/svg-country-flags/png100px/${flagImg}" style="width: 25px">
+            return `<td width="37%">
+                <img src="node_modules/svg-country-flags/png100px/${flagImg}" 
+                    style="height: 15px; width: 25px; margin-bottom: 3px"> 
                 ${obj[key]}</td>`;
         }
         else {
-            return `<td>${obj[key]}</td>`;
+            if (typeof obj[key] == 'number'){
+                return `<td width="20%"> ${this.#useRates ? obj[key].toLocaleString("ru") : obj[key].toFixed(12)}</td>`;
+            }
+            return `<td width="20%">${obj[key]}</td>`;
         }
-
     }
     repaintTableHendler(key, headerId) {
         let oldDown = document.getElementsByClassName("bi bi-arrow-down-short");
@@ -91,8 +92,12 @@ function fillTableHeader(headerElement, keys, sortFun) {
 }
 function getColumns(keys, sortFun) {
     return keys.map(key => {
+        if(key == `deaths`){
+            return  `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short"></i></th>`
+        }
+
         return !sortFun || key == '' || key == 'country' ? `<th>${key}</th>`
-            : `<th style="cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-down-short d-none"></i></th>`;
+            : `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short d-none"></i></th>`;
     })
         .join('');
 }
