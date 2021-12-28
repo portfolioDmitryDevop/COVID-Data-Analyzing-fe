@@ -140,7 +140,7 @@ export default class DataProcessor {
                                                             this.#useRates ? death.amount : death.rate, 
                                                             vaccinated / population, 
                                                             this.#useRates ? confirmed.rate : confirmed.amount, 
-                                                            this.#useRates ? death.rate : confirmed.amount, 
+                                                            this.#useRates ? death.rate : death.amount, 
                                                             this.#useRates ? vaccinated / population : vaccinated);
                                                  // return {iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated};
 
