@@ -8,9 +8,11 @@ export default class DataProcessor {
     #dataHistoryAll;
     #dataHistoryCountry;
     #tableSort = [];
+    #useRates;
 
-    constructor(dataProvider) {
+    constructor(dataProvider, useRates) {
         this.#dataProvider = dataProvider;
+        this.#useRates = useRates;
     }
 
     /* STAT BY CONTINENT REQUEST */
@@ -131,7 +133,15 @@ export default class DataProcessor {
             const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
             const death = this.#parseDatesData(deathData.All.dates, population, from, to);
             const vaccinated = objVaccines != undefined ? objVaccines.All.people_vaccinated : 0;
-            const statCaseDataObject = createStatDataObject(iso, country, confirmed.rate, death.rate, vaccinated / population, confirmed.amount, death.amount, vaccinated);
+            // const statCaseDataObject = createStatDataObject(iso, country, confirmed.rate, death.rate, vaccinated / population, confirmed.amount, death.amount, vaccinated);
+            const statCaseDataObject = createStatDataObject(iso, 
+                                                            country, 
+                                                            this.#useRates ? confirmed.amount : confirmed.rate, 
+                                                            this.#useRates ? death.amount : death.rate, 
+                                                            vaccinated / population, 
+                                                            this.#useRates ? confirmed.rate : confirmed.amount, 
+                                                            this.#useRates ? death.rate : confirmed.amount, 
+                                                            this.#useRates ? vaccinated / population : vaccinated);
                                                  // return {iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated};
 
             return statCaseDataObject;
