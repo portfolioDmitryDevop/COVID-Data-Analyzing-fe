@@ -192,14 +192,16 @@ export default class DataProcessor {
         arr.length;
 
 
-        if(count == undefined) {
-            count = this.#dataHistoryAll.length;
-        }
+  
         let data;
         if(headerId == "stat-header"){
             data = this.#dataHistoryCountry;
         }   else {
             data = this.#dataHistoryAll;
+        }
+
+        if(count == undefined || count == "") {
+            count = data.length;
         }
 
  
