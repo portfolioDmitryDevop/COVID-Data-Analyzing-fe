@@ -115,7 +115,7 @@ export default class DataProcessor {
                 if (statCase != null) arrCases.push(statCase);
             }
         }
-        this.#dataHistoryAll = _.sortBy(arrCases, "deathsRate");;
+        this.#dataHistoryAll = _.sortBy(arrCases, "deathsRate").reverse();
         return this.#dataHistoryAll;
     }
 

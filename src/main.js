@@ -91,7 +91,7 @@ function statSort(key, headerId){
         statTableHandler.clear();
         let counter = 1;
         const sorted = dataProcessor.sort(key, headerId, countCountry);
-        sorted.forEach(c => statTableHandler.addRowImPosition(c, counter++));
+        sorted.forEach(c => statTableHandler.addRowImPosition(convertToHumanReadbleNumber(c), counter++));
     })
 }
 
@@ -101,7 +101,7 @@ function historySort(key, headerId){
         historyTableHandler.clear();
         let counter = 1;
         const sorted = dataProcessor.sort(key, headerId, countCountry);
-        sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));
+        sorted.forEach(c => historyTableHandler.addRowImPosition(convertToHumanReadbleNumber(c), counter++));
     })
 }
 

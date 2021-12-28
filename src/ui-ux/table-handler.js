@@ -89,8 +89,12 @@ function fillTableHeader(headerElement, keys, sortFun) {
 }
 function getColumns(keys, sortFun) {
     return keys.map(key => {
+        if(key == `deaths`){
+            return  `<th style="cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short"></i></th>`
+        }
+
         return !sortFun || key == '' || key == 'country' ? `<th>${key}</th>`
-            : `<th style="cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-down-short d-none"></i></th>`;
+            : `<th style="cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short d-none"></i></th>`;
     })
         .join('');
 }
