@@ -61,9 +61,10 @@ export default class TableHandler {
             return `<td width="20%">${obj[key]}</td>`;
         }
     }
+
     repaintTableHendler(key, headerId, byDefault) {
-        let oldDown = document.getElementsByClassName("bi bi-arrow-down-short");
-        let oldUp = document.getElementsByClassName("bi bi-arrow-up-short");
+        let oldDown = document.querySelectorAll(`#${headerId} .bi-arrow-down-short`);
+        let oldUp = document.querySelectorAll(`#${headerId} .bi-arrow-up-short`);
 
         if (oldDown != undefined) {
             for (const key in oldDown) {
