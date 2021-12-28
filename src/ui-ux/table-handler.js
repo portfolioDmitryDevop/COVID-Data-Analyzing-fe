@@ -33,7 +33,6 @@ export default class TableHandler {
     }
     addRowImPosition(obj, position) {
         this.#bodyElement.innerHTML += `<tr><td width="3%" style="padding-right: 0; text-align: center;">${position}</td>${this.#getRecordData(obj, position)}</tr>`;
-    }
     addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
     }
@@ -102,4 +101,3 @@ function getColumns(keys, sortFun) {
     })
         .join('');
 }
-
