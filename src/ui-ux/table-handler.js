@@ -17,12 +17,12 @@ export default class TableHandler {
             }
             fillTableHeader(headerElement, keys, sortFun);
         }
-        if (sortFun){
+        if (sortFun) {
             const columnsEl = document.querySelectorAll(`#${headerId} th`);
             columnsEl.forEach(c => {
-                if(c.innerHTML != "country" && c.innerHTML != ""){
-                    c.addEventListener('click', 
-                    sortFun.bind(this, c.textContent, headerId));
+                if (c.innerHTML != "country" && c.innerHTML != "") {
+                    c.addEventListener('click',
+                        sortFun.bind(this, c.textContent, headerId));
                 }
             });
         }
@@ -31,8 +31,8 @@ export default class TableHandler {
         this.#bodyElement.innerHTML = ' ';
     }
     addRowImPosition(obj, position) {
-        this.#bodyElement.innerHTML += `<tr><td>${position}</td>${this.#getRecordData(obj,position)}</tr>`;
-        }
+        this.#bodyElement.innerHTML += `<tr><td>${position}</td>${this.#getRecordData(obj, position)}</tr>`;
+    }
     addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
     }
@@ -43,12 +43,37 @@ export default class TableHandler {
         return this.#keys.map(key => this.#getColumnData(obj, key)).join('');
     }
     #getColumnData(obj, key) {
-        if(obj[key] == undefined){
+        if (obj[key] == undefined) {
             return ``;
         }
-        return `<td>${obj[key].constructor.name === "Date" 
-            ? obj[key].toISOString().substr(0,10) 
+        return `<td>${obj[key].constructor.name === "Date"
+            ? obj[key].toISOString().substr(0, 10)
             : obj[key]}</td>`
+    }
+    repaintTableHendler(key, headerId) {
+        let oldDown = document.getElementsByClassName("bi bi-arrow-down-short");
+        let oldUp = document.getElementsByClassName("bi bi-arrow-up-short");
+
+        if (oldDown != undefined) {
+            for (const key in oldDown) {
+                if (oldDown[key].className != undefined) {
+                    oldDown[key].className = "bi bi-arrow-down-short d-none";
+                }
+            }
+        }
+        if (oldUp != undefined) {
+            for (const key in oldUp) {
+                if (oldUp[key].className != undefined) {
+                    oldUp[key].className = "bi bi-arrow-up-short d-none";
+                }
+            }
+        }
+        let element = document.querySelector(`#${headerId} #${key}`);
+        if (element.className == "bi bi-arrow-down-short d-none") {
+            element.className = "bi bi-arrow-up-short";
+        } else {
+            element.className = "bi bi-arrow-down-short";
+        }
     }
 }
 
@@ -57,8 +82,9 @@ function fillTableHeader(headerElement, keys, sortFun) {
 }
 function getColumns(keys, sortFun) {
     return keys.map(key => {
-        return !sortFun || key == '' || key == 'country'  ? `<th>${key}</th>` 
-            : `<th style="cursor: pointer">${key}</th>`;
+        return !sortFun || key == '' || key == 'country' ? `<th>${key}</th>`
+            : `<th style="cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-down-short d-none"></i></th>`;
     })
-    .join('');
+        .join('');
 }
+

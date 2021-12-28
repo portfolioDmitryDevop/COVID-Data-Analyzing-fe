@@ -72,15 +72,6 @@ function fillHistTable(from, to, num) {
     });
 }
 
-function historySort(key, headerId){
-    spinner.wait(async () => {
-        historyTableHandler.clear();
-        let counter = 1;
-        const sorted = dataProcessor.sort(key, headerId, countCountry);
-        sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));
-    })
-}
-
 function fillStatTable(from, to, countries) {
     statTableHandler.clear();
     let counter = 1;
@@ -97,11 +88,22 @@ function fillStatTable(from, to, countries) {
 }
 
 function statSort(key, headerId){
+    historyTableHandler.repaintTableHendler(key, headerId);
     spinner.wait(async () => {
         statTableHandler.clear();
         let counter = 1;
         const sorted = dataProcessor.sort(key, headerId, countCountry);
         sorted.forEach(c => statTableHandler.addRowImPosition(c, counter++));
+    })
+}
+
+function historySort(key, headerId){
+    historyTableHandler.repaintTableHendler(key, headerId);
+    spinner.wait(async () => {
+        historyTableHandler.clear();
+        let counter = 1;
+        const sorted = dataProcessor.sort(key, headerId, countCountry);
+        sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));
     })
 }
 
