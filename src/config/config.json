@@ -7,5 +7,18 @@
         "north america": "rgb(0, 204, 0)",
         "south america": "rgb(138, 99, 177)",
         "oceania": "rgb(192, 64, 128)"
-    }
+    },
+    "countriesList": [
+        "Argentina",
+        "Bahrain",
+        "Cameroon",
+        "China",
+        "Ethiopia",
+        "France",
+        "India",
+        "Israel",
+        "Kenya",
+        "New Zealand",
+        "Russia"
+    ]
 }

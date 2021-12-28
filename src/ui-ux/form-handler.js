@@ -58,6 +58,20 @@ export default class FormHandler {
             calendarElement.setAttribute('max', maxValue);
         }
     }
+
+    static fillCheckBoxes(parentId, values, name) {
+        const parentElement = document.getElementById(parentId);
+        if (!parentElement) {
+            throw 'Wrong parent id';
+        }
+        values.forEach(value => {
+            parentElement.innerHTML += `<div class="col-4 form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="${value}" name="${name}"
+             value="${value}">
+            <label for="${value}" class="form-check-label">${value}</label>
+          </div>`
+        });
+    }
 }
 
 function createObject(obj, element) {

@@ -186,11 +186,13 @@
           <div class="row">
             <div class="col-sm mb-2">
               <label class="form-label fw-bold" for="dateFromHist">Date From: </label>
-              <input type="date" class="form-control" id="dateFromHist" value="2020-01-22" min="2020-01-22" max="" name="fromDate" required>
+              <input type="date" class="form-control" id="dateFromHist" value="2020-01-22" 
+              min="2020-01-22" max="" name="fromDate" required>
             </div>
             <div class="col-sm mb-2">
               <label class="form-label fw-bold" for="dateToHist">Date To: </label>
-              <input type="date" class="form-control" id="dateToHist" value="" min="2020-01-23" max=""  name="toDate" required>
+              <input type="date" class="form-control" id="dateToHist" value="" 
+              min="2020-01-23" max="" name="toDate" required>
             </div>
 
             <div class="col-sm">
@@ -222,16 +224,19 @@
         <div class="container">
           <div class="row">
             <div class="col-sm mb-2">
-              <label class="form-label fw-bold" for="dateFromHist">Date From: </label>
-              <input type="date" class="form-control" id="dateFromHist" name="fromDate">
+              <label class="form-label fw-bold" for="dateFromStat">Date From: </label>
+              <input type="date" class="form-control" id="dateFromStat" value="2020-01-22" 
+              min="2020-01-22" max="" name="fromDate" required>
             </div>
             <div class="col-sm mb-2">
-              <label class="form-label fw-bold" for="dateToHist">Date To: </label>
-              <input type="date" class="form-control" id="dateToHist" name="toDate">
-            </div>
-            <div class="col-sm mb-2">
-              <label class="form-label fw-bold" for="dateToHist">Countries: </label>
-              <select class="form-select" multiple aria-label="multiple select example"></select>
+              <label class="form-label fw-bold" for="dateToStat">Date To: </label>
+              <input type="date" class="form-control" id="dateToStat" value="" 
+              min="2020-01-23" max="" name="toDate" required>
+            </div>            
+          </div>
+          <label class="form-label fw-bold">Countries: </label>
+          <div class="container">
+            <div class="row border rounded" id="countries-list">              
             </div>
           </div>
           <div class="row mt-3">
