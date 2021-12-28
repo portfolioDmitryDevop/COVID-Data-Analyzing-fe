@@ -80,3 +80,10 @@
     left: 35%;
     color: #8d8b8b;
 }
+
+.checkSelectors {
+    color: #fd5786;
+    font-size: small;
+}
+
+.checkSelectors a { color: #fd5786; }

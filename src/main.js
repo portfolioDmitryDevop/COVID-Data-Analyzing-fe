@@ -99,6 +99,14 @@ spinner.wait(async () => {
 });
 setInterval(poller, config.pollingIntervalInSeconds * 1000);
 
+window.checkboxSelector = async function(boolean) {
+    const list = document.querySelectorAll("#countries-list [name]");
+    for (let index = 0; index < list.length; index++) {
+        list[index].checked = boolean == "true";
+    }
+}
+
+/***** HANDLERS *****/
 FormHandler.fillCalendarValues('dateFromHist', undefined, convertDate(new Date()));
 FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDate(new Date()));
 FormHandler.fillCalendarValues('dateFromStat', undefined, convertDate(new Date()));
@@ -112,3 +120,4 @@ fillStatTable(new Date(firstObservationDay), new Date());
 statFormHandler.addHandler(data => {
     fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries);
 });
+
