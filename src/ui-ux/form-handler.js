@@ -65,9 +65,9 @@ export default class FormHandler {
             throw 'Wrong parent id';
         }
         values.forEach(value => {
-            parentElement.innerHTML += `<div class="col-4 form-check ms-2">
+            parentElement.innerHTML += `<div class="col-6 col-sm-3 form-check ms-2">
             <input type="checkbox" class="form-check-input" id="${value}" name="${name}"
-             value="${value}">
+             value="${value}" checked>
             <label for="${value}" class="form-check-label">${value}</label>
           </div>`
         });
