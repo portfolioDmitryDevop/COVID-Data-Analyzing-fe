@@ -30,6 +30,7 @@ let countCountry;
 
 /***** FUNCTIONS *****/
 async function poller() {
+    dashboard.showPlaceHolders();
     const continentsData = await dataProcessor.getStatisticsContinents();
     fillDashboard(continentsData);
     fillMapData(continentsData);

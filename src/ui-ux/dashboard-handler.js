@@ -1,3 +1,5 @@
+import { setDesctopPlacholders, setMapPlacholders } from "./placeholders";
+
 export default class DashboardHandler {
 
     #map;
@@ -11,6 +13,7 @@ export default class DashboardHandler {
         if (!this.#map) throw new Error(`Wrong map ID (${mapId})`)
         if (!this.#dashboard) throw new Error(`Wrong dashboard ID (${dashboardId})`);
         if (!this.#conventions) throw new Error(`Wrong conventions ID (${conventionsId})`);
+        this.showPlaceHolders();
     }
 
     clear() {
@@ -72,6 +75,11 @@ export default class DashboardHandler {
     addConventions() {
         this.#conventions.innerHTML = conventionsHTML;
         this.#map.innerHTML += `<div class="conventionsMap">${conventionsHTML}</div>`
+    }
+
+    showPlaceHolders() {
+      setMapPlacholders(this.#map);
+      setDesctopPlacholders(this.#dashboard);
     }
 
     
