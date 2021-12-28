@@ -1,6 +1,6 @@
 {
     "pollingIntervalInSeconds": 30,
-    "useRates": true,
+    "useRates": false,
     "continentColors": {
         "europe": "rgb(73, 163, 208)",
         "asia": "rgb(242, 127, 56)",
