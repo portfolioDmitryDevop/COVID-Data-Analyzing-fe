@@ -26,16 +26,7 @@ export default class FormHandler {
     async #onSubmit(handlerFun, event) {
         event.preventDefault();
         const obj = this.#inputElements.reduce(createObject, {});
-        try {
-            hideAlert(this.#alertElement);
-            await handlerFun(obj);
-        }
-        catch(validationErrors) {   
-            if (validationErrors == 'Server is unavailable') {
-                throw validationErrors;
-            }
-            showAlert(this.#alertElement, validationErrors);
-        }
+        await handlerFun(obj);
     }
 
     static fillOptions(selectId, options) {
@@ -97,15 +88,4 @@ function createObject(obj, element) {
 
 function getOptions(options) {
     return options.map(o => `<option value="${o}">${o}</option>`).join('');
-}
-
-function showAlert(alertElement, message) {
-    alertElement.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>${message}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>`;
-}
-
-function hideAlert(alertElement) {
-    alertElement.innerHTML = '';
 }
