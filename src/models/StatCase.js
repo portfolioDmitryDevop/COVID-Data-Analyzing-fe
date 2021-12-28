@@ -1,3 +1,3 @@
-export default function createStatDataObject(iso, country, confirmed, deaths, vaccinated, confirmedCount, deathsCount, vaccinatedCount) {
-        return {iso, country, confirmed, deaths, vaccinated, confirmedCount, deathsCount, vaccinatedCount};
+export default function createStatDataObject(iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated) {
+        return {iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated};
 }

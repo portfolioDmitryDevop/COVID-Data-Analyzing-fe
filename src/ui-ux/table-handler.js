@@ -19,8 +19,12 @@ export default class TableHandler {
         }
         if (sortFun){
             const columnsEl = document.querySelectorAll(`#${headerId} th`);
-            columnsEl.forEach(c => c.addEventListener('click', 
-                sortFun.bind(this, c.textContent, headerId)));
+            columnsEl.forEach(c => {
+                if(c.innerHTML != "country" && c.innerHTML != ""){
+                    c.addEventListener('click', 
+                    sortFun.bind(this, c.textContent, headerId));
+                }
+            });
         }
     }
     clear() {
@@ -53,7 +57,7 @@ function fillTableHeader(headerElement, keys, sortFun) {
 }
 function getColumns(keys, sortFun) {
     return keys.map(key => {
-        return !sortFun ? `<th>${key}</th>` 
+        return !sortFun || key == '' || key == 'country'  ? `<th>${key}</th>` 
             : `<th style="cursor: pointer">${key}</th>`;
     })
     .join('');

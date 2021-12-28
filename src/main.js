@@ -19,10 +19,11 @@ const dashboard = new DashboardHandler('map','dashboard', 'conventions');
 const historyTableHandler = new TableHandler('history-header', 'history-body',
     ['', 'country', 'confirmed', 'deaths', 'vaccinated'], historySort);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
-    ['country', 'confirmed', 'deaths', 'vaccinated'], statSort);
+    ['','country', 'confirmed', 'deaths', 'vaccinated'], statSort);
 const historyFormHandler = new FormHandler('history-form', 'alert');
 const statFormHandler = new FormHandler('stat-form', 'alert');
 let countCountry;
+
 
 /***** FUNCTIONS *****/
 
@@ -57,10 +58,10 @@ function fillMapData(continentsArr) {
 }
 
 function fillHistTable(from, to, num) {
-    historyTableHandler.clear();
-    countCountry = num;
-    let counter = 1;
     spinner.wait(async () => {
+        historyTableHandler.clear();
+        countCountry = num;
+        let counter = 1;
         let histArr = await dataProcessor.getHistoryStatistics(from, to);
         if (num == '' || num == undefined) {
             histArr.forEach(obj => {
@@ -75,17 +76,21 @@ function fillHistTable(from, to, num) {
 }
 
 function historySort(key, headerId){
-    historyTableHandler.clear();
-    let counter = 1;
-    const sorted = dataProcessor.sort(key, headerId);
-    sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));
+    spinner.wait(async () => {
+        historyTableHandler.clear();
+        let counter = 1;
+        const sorted = dataProcessor.sort(key, headerId, countCountry);
+        sorted.forEach(c => historyTableHandler.addRowImPosition(c, counter++));
+    })
 }
 
 function statSort(key, headerId){
-    statTableHandler.clear();
-    let counter = 1;
-    const sorted = dataProcessor.sort(key, headerId);
-    sorted.forEach(c => statTableHandler.addRowImPosition(c, counter++));
+    spinner.wait(async () => {
+        statTableHandler.clear();
+        let counter = 1;
+        const sorted = dataProcessor.sort(key, headerId, countCountry);
+        sorted.forEach(c => statTableHandler.addRowImPosition(c, counter++));
+    })
 }
 
 /***** ACTIONS *****/
@@ -101,4 +106,4 @@ FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDat
 
 fillHistTable(new Date(firstObservationDay), new Date());
 historyFormHandler.addHandler(async data => 
-    fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
+fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
