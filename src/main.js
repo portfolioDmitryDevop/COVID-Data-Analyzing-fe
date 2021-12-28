@@ -16,13 +16,13 @@ FormHandler.fillCheckBoxes('countries-list', config.countriesList, 'countries');
 
 /***** OBJECTS *****/
 const firstObservationDay = '2020-01-22';
-const dataProcessor = new DataProcessor(dataProvider);
+const dataProcessor = new DataProcessor(dataProvider, config.useRates);
 const spinner = new Spinner("spinner");
 const dashboard = new DashboardHandler('map', 'dashboard', 'conventions');
 const historyTableHandler = new TableHandler('history-header', 'history-body',
-    ['', 'country', 'confirmed', 'deaths', 'vaccinated'], historySort);
+    ['', 'country', 'confirmed', 'deaths', 'vaccinated'], historySort, config.useRates);
 const statTableHandler = new TableHandler('stat-header', 'stat-body',
-    ['', 'country', 'confirmed', 'deaths', 'vaccinated'], statSort);
+    ['', 'country', 'confirmed', 'deaths', 'vaccinated'], statSort, config.useRates);
 const historyFormHandler = new FormHandler('history-form');
 const statFormHandler = new FormHandler('stat-form');
 let countCountry;

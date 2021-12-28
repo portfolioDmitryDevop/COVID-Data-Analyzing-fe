@@ -2,9 +2,10 @@ export default class TableHandler {
 
     #keys; // fields of being displayed object
     #bodyElement;
+    #useRates;
 
-    constructor(headerId, bodyId, keys, sortFun) {
-
+    constructor(headerId, bodyId, keys, sortFun, useRates) {
+        this.useRates = useRates;
         this.#keys = keys;
         this.#bodyElement = document.getElementById(bodyId);
         if (!this.#bodyElement) {
@@ -55,7 +56,7 @@ export default class TableHandler {
         }
         else {
             if (typeof obj[key] == 'number'){
-                return `<td width="20%"> ${obj[key].toLocaleString("ru")}</td>`;
+                return `<td width="20%"> ${this.#useRates ? obj[key].toLocaleString("ru") : obj[key].toFixed(12)}</td>`;
             }
             return `<td width="20%">${obj[key]}</td>`;
         }
