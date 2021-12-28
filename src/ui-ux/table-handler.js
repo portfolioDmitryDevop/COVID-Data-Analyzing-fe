@@ -34,7 +34,7 @@ export default class TableHandler {
     addRowImPosition(obj, position) {
         this.#bodyElement.innerHTML += `<tr><td width="3%" style="padding-right: 0; text-align: center;">${position}</td>${this.#getRecordData(obj, position)}</tr>`;
     }
-        addRow(obj) {
+    addRow(obj) {
         this.#bodyElement.innerHTML += `<tr>${this.#getRecordData(obj)}</tr>`;
     }
     addRowColored(obj, color) {
@@ -44,7 +44,7 @@ export default class TableHandler {
         return this.#keys.map(key => this.#getColumnData(obj, key)).join('');
     }
     #getColumnData(obj, key) {
-        if(obj[key] == undefined){
+        if (obj[key] == undefined) {
             return ``;
         }
         if (key === 'country') {
@@ -55,7 +55,7 @@ export default class TableHandler {
                 ${obj[key]}</td>`;
         }
         else {
-            if (typeof obj[key] == 'number'){
+            if (typeof obj[key] == 'number') {
                 return `<td width="20%"> ${this.#useRates ? obj[key].toLocaleString("ru") : obj[key].toFixed(12)}</td>`;
             }
             return `<td width="20%">${obj[key]}</td>`;
@@ -91,10 +91,11 @@ export default class TableHandler {
 function fillTableHeader(headerElement, keys, sortFun) {
     headerElement.innerHTML = getColumns(keys, sortFun);
 }
+
 function getColumns(keys, sortFun) {
     return keys.map(key => {
-        if(key == `deaths`){
-            return  `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short"></i></th>`
+        if (key == `deaths`) {
+            return `<th style="width: 20%; cursor: pointer; color: #fd5786 ">${key}<i id="${key}" class="bi bi-arrow-up-short"></i></th>`
         }
 
         return !sortFun || key == '' || key == 'country' ? `<th>${key}</th>`

@@ -81,8 +81,6 @@ export default class DashboardHandler {
       setMapPlacholders(this.#map);
       setDesctopPlacholders(this.#dashboard);
     }
-
-    
 }
 
 const conventionsHTML = `<ul class="list-unstyled list-inline small text-center pt-3">

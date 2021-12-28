@@ -191,16 +191,11 @@ export default class DataProcessor {
     }
 
     sort(key, headerId, count) {
-        
-        
-
         if (this.#tableSort[headerId] == undefined) {
             this.#tableSort[headerId] = { country: true, confirmed: true, deaths: true, vaccinated: true };
         }
         let arr = [];
         arr.length;
-
-
   
         let data;
         if(headerId == "stat-header"){
@@ -212,7 +207,6 @@ export default class DataProcessor {
         if(count == undefined || count == "") {
             count = data.length;
         }
-
  
         switch (key) {
 

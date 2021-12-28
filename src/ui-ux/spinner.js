@@ -27,12 +27,12 @@ export default class Spinner {
 
     // Show/hide spinner
     async wait(awaitFunction) {
-    this.#start();
-    try {
-        const result = await awaitFunction();
-        return result;
-    } finally {
-        this.#stop()
+        this.#start();
+        try {
+            const result = await awaitFunction();
+            return result;
+        } finally {
+            this.#stop()
+        }
     }
-}
 }

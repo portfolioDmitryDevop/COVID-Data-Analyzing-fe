@@ -147,6 +147,7 @@ FormHandler.fillCalendarValues('dateFromHist', undefined, convertDate(new Date()
 FormHandler.fillCalendarValues('dateToHist', convertDate(new Date()), convertDate(new Date()));
 FormHandler.fillCalendarValues('dateFromStat', undefined, convertDate(new Date()));
 FormHandler.fillCalendarValues('dateToStat', convertDate(new Date()), convertDate(new Date()));
+
 historyFormHandler.addHandler(async data =>
     fillHistTable(new Date(data.fromDate), new Date(data.toDate), data.countriesNum));
 statFormHandler.addHandler(async data => {

@@ -38,14 +38,13 @@ export default class MMediaAPI {
         return res;
     }
 
-    async #updateHistoryData() {
-        this.#lastHistoryUpdate = new Date();
+    async #updateHistoryData() {        
         this.#historyDeathData = await this.getData(requestDeathHistory);
         this.#historyConfirmedData = await this.getData(requestConfirmedHistory);
+        this.#lastHistoryUpdate = new Date();
     }
 
     #dataIsUpToDate(currentDate) {
         return removeTime(currentDate) > removeTime(this.#lastHistoryUpdate);
     }
-
 }
