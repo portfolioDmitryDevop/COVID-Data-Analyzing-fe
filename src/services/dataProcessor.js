@@ -18,80 +18,45 @@ export default class DataProcessor {
     /* STAT BY CONTINENT REQUEST */
 
     async getStatisticsContinents() {
+        const objCases = this.#parseObjCases(await this.#dataProvider.getCasesData());
+        const objVaccines = this.#parseObjVaccines(await this.#dataProvider.getVaccinesData());
+        let objCasesVaccines = _.merge(objCases, objVaccines);
+        objCasesVaccines = _.values(objCasesVaccines);
+        const objContinent = _.groupBy(objCasesVaccines, (e) => e.continent);
+        const res = this.#getArrRate(objContinent);
+        return res;
+    }
 
-        const objCases = await this.#dataProvider.getCasesData();
-        const arrCases = this.#parseObjCases(objCases);
-        const objVaccines = await this.#dataProvider.getVaccinesData();
-        const arrVaccines = this.#parseObjVaccines(objVaccines);
-        let arrMerge = _.merge(_.keyBy(arrCases, 'country'), _.keyBy(arrVaccines, 'country'));
-        arrMerge = _.values(arrMerge);
-        const objContinent = _.groupBy(arrMerge, (e) => {
-            return e.continent;
+    #parseObjCases(obj) {
+        return _.mapValues(obj, (e) => {
+            return {country:e.country,confirmed:e.confirmed,deaths:e.deaths,population:e.population,continent:e.continent};
         });
-        const arrRate = this.#getArrRate(objContinent);
-
-        return arrRate;
     }
 
-    #parseObjCases(objCases) {
-        const arrCases = [];
-        for (const key in objCases) {
-
-            arrCases.push({
-                "country": key,
-                "confirmed": objCases[key].All.confirmed,
-                "deaths": objCases[key].All.deaths,
-                "population": objCases[key].All.population,
-                "continent": objCases[key].All.continent
-            });
-        }
-        return arrCases;
-    }
-
-    #parseObjVaccines(objVaccines) {
-        const arrVaccines = [];
-        for (const key in objVaccines) {
-            arrVaccines.push({
-                "country": key,
-                "vaccinated": objVaccines[key].All.people_vaccinated,
-                "population": objVaccines[key].All.population
-            });
-        }
-        return arrVaccines;
+    #parseObjVaccines(obj) {
+        return _.mapValues(obj, (e) => {
+            return {country:e.country,vaccinated:e.people_vaccinated,population:e.population};
+        });
     }
 
     #getArrRate(objContinent) {
-        const arrRate = [];
-        Object.entries(objContinent)
-            .forEach((e) => {
-                const acc = { population: 0, confirmed: 0, deaths: 0, vaccinated: 0 };
-                e[1].forEach((v) => {
-                    if (v.continent === undefined) {
-                        return;
+
+        for (const key in objContinent) {
+            objContinent[key] = _.reduce(objContinent[key], (r,v) => {
+                try {
+                    return {
+                    deaths : (v.deaths = v.deaths != undefined ? v.deaths : 0) + r.deaths,
+                    confirmed : (v.confirmed = v.confirmed != undefined ? v.confirmed : 0) + r.confirmed,
+                    population : (v.population = v.population != undefined ? v.population : 0) + r.population,
+                    vaccinated : (v.vaccinated = v.vaccinated != undefined ? v.vaccinated : 0) + r.vaccinated
                     }
-                    let population = (v.population === undefined) ? 0 : v.population;
-                    let vaccinated = (v.vaccinated === undefined) ? 0 : v.vaccinated;
-                    let confirmed = (v.confirmed === undefined) ? 0 : v.confirmed;
-                    let deaths = (v.deaths === undefined) ? 0 : v.deaths;
-                    acc.population += population;
-                    acc.confirmed += confirmed;
-                    acc.deaths += deaths;
-                    acc.vaccinated += vaccinated;
-                })
-                if (e[0] != 'undefined') {
-                    arrRate.push({
-                        "continent": e[0],
-                        "confirmed": acc.confirmed / acc.population * 100,
-                        "deaths": acc.deaths / acc.population * 100,
-                        "vaccinated": acc.vaccinated / acc.population * 100,
-                        "confirmedAmount": acc.confirmed,
-                        "deathsAmount": acc.deaths,
-                        "vaccinatedAmount": acc.vaccinated,
-                        "population": acc.population
-                    });
+                } catch (err) {
+                    console.log(`v=${v} r=${r}`);
                 }
-            });
-        return arrRate;
+            }, {deaths:0,confirmed:0,population:0, vaccinated:0});
+        }
+        
+        return objContinent;
     }
 
     /* HISTORICAL REQUEST */

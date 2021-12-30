@@ -1,5 +1,5 @@
 import { removeTime } from "../utilities/extensions";
-
+import _ from "lodash";
 const requestCases = "cases";
 const requestVaccines = "vaccines";
 const requestDeathHistory = "history?status=deaths";
@@ -24,12 +24,15 @@ export default class MMediaAPI {
         return {death: this.#historyDeathData, confirmed: this.#historyConfirmedData};
     }
 
-    getVaccinesData(){
-        return this.getData(requestVaccines);
+    async getVaccinesData(){
+        const obj = await this.getData(requestVaccines);
+        return _.mapValues(obj, (e) => e.All);
+        
     }
 
-    getCasesData(){
-        return this.getData(requestCases);
+    async getCasesData(){
+        let obj = await this.getData(requestCases);
+        return _.mapValues(obj, (e) => e.All);
     }
 
     async getData(parameters){
@@ -39,8 +42,8 @@ export default class MMediaAPI {
     }
 
     async #updateHistoryData() {        
-        this.#historyDeathData = await this.getData(requestDeathHistory);
-        this.#historyConfirmedData = await this.getData(requestConfirmedHistory);
+        this.#historyDeathData = _.mapValues(await this.getData(requestDeathHistory), (e) => e.All); 
+        this.#historyConfirmedData = _.mapValues(await this.getData(requestConfirmedHistory), (e) => e.All);
         this.#lastHistoryUpdate = new Date();
     }
 
