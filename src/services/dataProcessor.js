@@ -22,40 +22,48 @@ export default class DataProcessor {
         const objVaccines = this.#parseObjVaccines(await this.#dataProvider.getVaccinesData());
         let objCasesVaccines = _.merge(objCases, objVaccines);
         objCasesVaccines = _.values(objCasesVaccines);
+        objCasesVaccines =_.filter(objCasesVaccines, (p) => p.continent!=undefined);
         const objContinent = _.groupBy(objCasesVaccines, (e) => e.continent);
-        const res = this.#getArrRate(objContinent);
+        const objContinentAmount = this.#getObjContinentAmount(objContinent);
+        const res = this.#getArrRate(objContinentAmount);
         return res;
     }
 
     #parseObjCases(obj) {
         return _.mapValues(obj, (e) => {
-            return {country:e.country,confirmed:e.confirmed,deaths:e.deaths,population:e.population,continent:e.continent};
+            return { country: e.country, confirmed: e.confirmed, deaths: e.deaths, population: e.population, continent: e.continent };
         });
     }
 
     #parseObjVaccines(obj) {
         return _.mapValues(obj, (e) => {
-            return {country:e.country,vaccinated:e.people_vaccinated,population:e.population};
+            return { country: e.country, vaccinated: e.people_vaccinated, population: e.population };
         });
     }
 
-    #getArrRate(objContinent) {
+    #getArrRate(objContinentAmount) {
+        return _.map(objContinentAmount, (e) => {
+            const deaths = e.deathsAmount / e.population * 100;
+            const confirmed = e.confirmedAmount / e.population * 100;
+            const vaccinated = e.vaccinatedAmount / e.population * 100;
+            const objRate = { deaths: deaths, confirmed: confirmed, vaccinated: vaccinated, continent: undefined };
+            return _.merge(objRate, e);
+        })
+    }
 
+    #getObjContinentAmount(objContinent) {
         for (const key in objContinent) {
-            objContinent[key] = _.reduce(objContinent[key], (r,v) => {
-                try {
-                    return {
-                    deaths : (v.deaths = v.deaths != undefined ? v.deaths : 0) + r.deaths,
-                    confirmed : (v.confirmed = v.confirmed != undefined ? v.confirmed : 0) + r.confirmed,
-                    population : (v.population = v.population != undefined ? v.population : 0) + r.population,
-                    vaccinated : (v.vaccinated = v.vaccinated != undefined ? v.vaccinated : 0) + r.vaccinated
-                    }
-                } catch (err) {
-                    console.log(`v=${v} r=${r}`);
+            objContinent[key] = _.reduce(objContinent[key], (r, v) => {
+                return {
+                    deathsAmount: (v.deaths = v.deaths != undefined ? v.deaths : 0) + r.deathsAmount,
+                    confirmedAmount: (v.confirmed = v.confirmed != undefined ? v.confirmed : 0) + r.confirmedAmount,
+                    population: (v.population = v.population != undefined ? v.population : 0) + r.population,
+                    vaccinatedAmount: (v.vaccinated = v.vaccinated != undefined ? v.vaccinated : 0) + r.vaccinatedAmount,
+                    continent: v.continent
                 }
-            }, {deaths:0,confirmed:0,population:0, vaccinated:0});
+                }, { population: 0, deathsAmount: 0, confirmedAmount: 0, vaccinatedAmount: 0}
+            );
         }
-        
         return objContinent;
     }
 
@@ -85,42 +93,42 @@ export default class DataProcessor {
     async #createStatCase(confirmedData, deathData, objVaccines, from, to) {
         const country = confirmedData.All.country;
         try {
-            if(!this.#validateStatCase(confirmedData, objVaccines)){
+            if (!this.#validateStatCase(confirmedData, objVaccines)) {
                 return;
             }
         } catch (error) {
             return;
         }
 
-        if (country != undefined && objVaccines != undefined ) {
+        if (country != undefined && objVaccines != undefined) {
             const population = confirmedData.All.population;
             const iso = confirmedData.All.abbreviation;
             const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
             const death = this.#parseDatesData(deathData.All.dates, population, from, to);
             const vaccinated = objVaccines != undefined ? objVaccines.All.people_vaccinated : 0;
             // const statCaseDataObject = createStatDataObject(iso, country, confirmed.rate, death.rate, vaccinated / population, confirmed.amount, death.amount, vaccinated);
-            const statCaseDataObject = createStatDataObject(iso, 
-                                                            country, 
-                                                            this.#useRates ? confirmed.amount : confirmed.rate, 
-                                                            this.#useRates ? death.amount : death.rate, 
-                                                            vaccinated / population, 
-                                                            this.#useRates ? confirmed.rate : confirmed.amount, 
-                                                            this.#useRates ? death.rate : death.amount, 
-                                                            this.#useRates ? vaccinated / population : vaccinated);
-                                                 // return {iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated};
+            const statCaseDataObject = createStatDataObject(iso,
+                country,
+                this.#useRates ? confirmed.amount : confirmed.rate,
+                this.#useRates ? death.amount : death.rate,
+                vaccinated / population,
+                this.#useRates ? confirmed.rate : confirmed.amount,
+                this.#useRates ? death.rate : death.amount,
+                this.#useRates ? vaccinated / population : vaccinated);
+            // return {iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated};
 
             return statCaseDataObject;
         }
 
     }
 
-    #validateStatCase(confirmedData, objVaccines){
+    #validateStatCase(confirmedData, objVaccines) {
         return objVaccines != undefined &&
-        confirmedData != undefined &&
-        objVaccines.All != undefined &&
-        confirmedData.All != undefined &&
-        confirmedData.All.population != 0 &&
-        objVaccines.All.people_vaccinated != 0;
+            confirmedData != undefined &&
+            objVaccines.All != undefined &&
+            confirmedData.All != undefined &&
+            confirmedData.All.population != 0 &&
+            objVaccines.All.people_vaccinated != 0;
     }
 
     #parseDatesData(data, population, from, to) {
@@ -161,49 +169,49 @@ export default class DataProcessor {
         }
         let arr = [];
         arr.length;
-  
+
         let data;
-        if(headerId == "stat-header"){
+        if (headerId == "stat-header") {
             data = this.#dataHistoryCountry;
-        }   else {
+        } else {
             data = this.#dataHistoryAll;
         }
 
-        if(count == undefined || count == "") {
+        if (count == undefined || count == "") {
             count = data.length;
         }
- 
+
         switch (key) {
 
-            case "country":{
-                
+            case "country": {
+
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
                     return _.sortBy(data, key).slice(0, count);
                 } else {
                     return _.sortBy(data, key).reverse().slice(0, count);
                 }
             }
-            case "confirmed":               {
-                    if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                        const res = _.sortBy(data, "confirmed");
-                        return res.slice(0, count);
-                    } else {
-                        const res = _.sortBy(data, "confirmed").reverse();
-                        return res.slice(0, count);
-                    }
-                }
-            case "deaths":{
-                 
+            case "confirmed": {
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
-                   const res = _.sortBy(data, "deaths");
-                   return res.slice(0, count);
-               } else {
-                const res = _.sortBy(data, "deaths").reverse();
-                   return res.slice(0, count);
-               }
+                    const res = _.sortBy(data, "confirmed");
+                    return res.slice(0, count);
+                } else {
+                    const res = _.sortBy(data, "confirmed").reverse();
+                    return res.slice(0, count);
+                }
             }
-            case "vaccinated":{
-                
+            case "deaths": {
+
+                if (this.#isReverseSort(key, this.#tableSort[headerId])) {
+                    const res = _.sortBy(data, "deaths");
+                    return res.slice(0, count);
+                } else {
+                    const res = _.sortBy(data, "deaths").reverse();
+                    return res.slice(0, count);
+                }
+            }
+            case "vaccinated": {
+
                 if (this.#isReverseSort(key, this.#tableSort[headerId])) {
                     const res = _.sortBy(data, "vaccinated");
                     return res.slice(0, count);
