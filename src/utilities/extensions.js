@@ -24,7 +24,10 @@ export function getPreviousDay(selectedDay) {
 }
 
 function dateMinusOne(date) {
-    var previous = new Date();
-    previous.setDate(date.getDate() - 1);
-    return removeTime(previous);
+    // var previous = new Date();
+    // let day = date.getDate();
+    // console.log(day);
+    // previous.setDate(date.getDate() - 1);
+    // date.setDate(date.getDate() - 1);
+    return removeTime(date.setDate(date.getDate() - 1));
 }

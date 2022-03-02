@@ -1,5 +1,4 @@
 import _ from "lodash";
-import createStatDataObject from "../models/StatCase";
 import { convertDate, getPreviousDay, removeTime } from "../utilities/extensions";
 
 export default class DataProcessor {
@@ -18,27 +17,11 @@ export default class DataProcessor {
     /* STAT BY CONTINENT REQUEST */
 
     async getStatisticsContinents() {
-        const objCases = this.#parseObjCases(await this.#dataProvider.getCasesData());
-        const objVaccines = this.#parseObjVaccines(await this.#dataProvider.getVaccinesData());
-        let objCasesVaccines = _.merge(objCases, objVaccines);
-        objCasesVaccines = _.values(objCasesVaccines);
-        objCasesVaccines =_.filter(objCasesVaccines, (p) => p.continent!=undefined);
-        const objContinent = _.groupBy(objCasesVaccines, (e) => e.continent);
-        const objContinentAmount = this.#getObjContinentAmount(objContinent);
-        const res = this.#getArrRate(objContinentAmount);
+        const data = await this.#dataProvider.getCountrys();
+        const dataContinent = _.groupBy(data, (e) => e.continent);
+        const dataContinentAmount = this.#getObjContinentAmount(dataContinent);
+        const res = this.#getArrRate(dataContinentAmount);
         return res;
-    }
-
-    #parseObjCases(obj) {
-        return _.mapValues(obj, (e) => {
-            return { country: e.country, confirmed: e.confirmed, deaths: e.deaths, population: e.population, continent: e.continent };
-        });
-    }
-
-    #parseObjVaccines(obj) {
-        return _.mapValues(obj, (e) => {
-            return { country: e.country, vaccinated: e.people_vaccinated, population: e.population };
-        });
     }
 
     #getArrRate(objContinentAmount) {
@@ -68,67 +51,19 @@ export default class DataProcessor {
     }
 
     /* HISTORICAL REQUEST */
-
     async getHistoryStatistics(from, to) {
         this.#validateInputDates(from, to);
-
         const fromDate = this.#setFromDate(from, to)
         const toDate = convertDate(getPreviousDay(to)); // To is excluded parameter
-        const data = await this.#dataProvider.getHistoryData();
-        const confirmed = data.confirmed;
-        const death = data.death;
-        const objVaccines = await this.#dataProvider.getVaccinesData();
-        const arrCases = [];
-
-        for (const key in confirmed) {
-            if (confirmed.hasOwnProperty(key)) {
-                const statCase = await this.#createStatCase(confirmed[key], death[key], objVaccines[key], fromDate, toDate);
-                if (statCase != null) arrCases.push(statCase);
-            }
-        }
-        this.#dataHistoryAll = _.sortBy(arrCases, "deaths").reverse();
+        const data = await this.#dataProvider.getCountrys();
+        const res = data.map(data=>{
+            const parse = {...data, 
+                confirmedPeriod: this.#parseDatesData(data.datesConfirmed, data.population, fromDate, toDate),
+                deathPeriod: this.#parseDatesData(data.datesDeath, data.population, fromDate, toDate)};
+            return parse;
+        });
+        this.#dataHistoryAll = _.sortBy(res, "deaths").reverse();
         return this.#dataHistoryAll;
-    }
-
-    async #createStatCase(confirmedData, deathData, objVaccines, from, to) {
-        const country = confirmedData.All.country;
-        try {
-            if (!this.#validateStatCase(confirmedData, objVaccines)) {
-                return;
-            }
-        } catch (error) {
-            return;
-        }
-
-        if (country != undefined && objVaccines != undefined) {
-            const population = confirmedData.All.population;
-            const iso = confirmedData.All.abbreviation;
-            const confirmed = this.#parseDatesData(confirmedData.All.dates, population, from, to);
-            const death = this.#parseDatesData(deathData.All.dates, population, from, to);
-            const vaccinated = objVaccines != undefined ? objVaccines.All.people_vaccinated : 0;
-            // const statCaseDataObject = createStatDataObject(iso, country, confirmed.rate, death.rate, vaccinated / population, confirmed.amount, death.amount, vaccinated);
-            const statCaseDataObject = createStatDataObject(iso,
-                country,
-                this.#useRates ? confirmed.amount : confirmed.rate,
-                this.#useRates ? death.amount : death.rate,
-                vaccinated / population,
-                this.#useRates ? confirmed.rate : confirmed.amount,
-                this.#useRates ? death.rate : death.amount,
-                this.#useRates ? vaccinated / population : vaccinated);
-            // return {iso, country, confirmedRate, deathsRate, vaccinatedRate, confirmed, deaths, vaccinated};
-
-            return statCaseDataObject;
-        }
-
-    }
-
-    #validateStatCase(confirmedData, objVaccines) {
-        return objVaccines != undefined &&
-            confirmedData != undefined &&
-            objVaccines.All != undefined &&
-            confirmedData.All != undefined &&
-            confirmedData.All.population != 0 &&
-            objVaccines.All.people_vaccinated != 0;
     }
 
     #parseDatesData(data, population, from, to) {

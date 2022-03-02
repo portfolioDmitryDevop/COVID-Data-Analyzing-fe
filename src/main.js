@@ -28,16 +28,19 @@ const statFormHandler = new FormHandler('stat-form');
 let countCountry;
 const alertEl = document.getElementById('alert');
 
+
 /***** FUNCTIONS *****/
 async function poller() {
     dashboard.showPlaceHolders();
     const continentsData = await dataProcessor.getStatisticsContinents();
+
     fillDashboard(continentsData);
 }
 function fillDashboard(continentsArr) {
     const worldStat = { confirmedAmount: 0, deathsAmount: 0, vaccinatedAmount: 0, population: 0 };
     dashboard.clear();
     continentsArr.forEach(data => {
+        if(data.continent == null) return;
         // Update Global World Stat Object
         worldStat.confirmedAmount += data.confirmedAmount;
         worldStat.deathsAmount += data.deathsAmount;
@@ -72,6 +75,7 @@ function fillHistTable(from, to, num) {
             }
         }
         catch (error) {
+            console.log("error!");
             showAlert(alertEl, error);
         }
 
@@ -155,6 +159,9 @@ historyFormHandler.addHandler(async data =>
 statFormHandler.addHandler(async data => {
     fillStatTable(new Date(data.fromDate), new Date(data.toDate), data.countries);
 });
+
+
+
 
 
 /***** ACTIONS *****/
