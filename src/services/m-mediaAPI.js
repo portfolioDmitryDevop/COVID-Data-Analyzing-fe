@@ -79,6 +79,7 @@ export default class MMediaAPI {
     }
 
     async getData(parameters) {
+        console.log(this.#url + parameters);
         const response = await fetch(this.#url + parameters);
         const res = await response.json();
         return res;
